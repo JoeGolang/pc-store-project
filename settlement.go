@@ -4,6 +4,7 @@ import (
 	"errors"
 	"pc-shop-final-project/domain/entity/coupon"
 	customer2 "pc-shop-final-project/domain/entity/customer"
+	user2 "pc-shop-final-project/domain/entity/user"
 	"strconv"
 	"time"
 )
@@ -11,7 +12,7 @@ import (
 type Settlement struct {
 	id         int
 	code       string
-	user       User
+	user       user2.User
 	customer   customer2.Customer
 	product    []Inventory
 	coupon     coupon.Coupon
@@ -22,7 +23,7 @@ type Settlement struct {
 type DTOSettlement struct {
 	Id         int
 	Code       string
-	User       User
+	User       user2.User
 	Customer   customer2.Customer
 	Product    []Inventory
 	Coupon     coupon.Coupon
@@ -78,7 +79,7 @@ func (sett *Settlement) GetValueIdSett() int {
 	return sett.id
 }
 
-func (sett *Settlement) GetValueUserSett() *User {
+func (sett *Settlement) GetValueUserSett() *user2.User {
 	return &sett.user
 }
 
