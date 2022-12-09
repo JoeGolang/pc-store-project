@@ -2,6 +2,8 @@ package entity
 
 import (
 	"errors"
+	"pc-shop-final-project/domain/entity/coupon"
+	customer2 "pc-shop-final-project/domain/entity/customer"
 	"strconv"
 	"time"
 )
@@ -10,9 +12,9 @@ type Settlement struct {
 	id         int
 	code       string
 	user       User
-	customer   Customer
+	customer   customer2.Customer
 	product    []Inventory
-	coupon     Coupon
+	coupon     coupon.Coupon
 	totalPrice int
 	statusTrns bool
 }
@@ -21,9 +23,9 @@ type DTOSettlement struct {
 	Id         int
 	Code       string
 	User       User
-	Customer   Customer
+	Customer   customer2.Customer
 	Product    []Inventory
-	Coupon     Coupon
+	Coupon     coupon.Coupon
 	TotalPrice int
 	StatusTrns bool
 }
@@ -80,11 +82,11 @@ func (sett *Settlement) GetValueUserSett() *User {
 	return &sett.user
 }
 
-func (sett *Settlement) GetValueCustomerSett() *Customer {
+func (sett *Settlement) GetValueCustomerSett() *customer2.Customer {
 	return &sett.customer
 }
 
-func (sett *Settlement) GetValueCouponSett() *Coupon {
+func (sett *Settlement) GetValueCouponSett() *coupon.Coupon {
 	return &sett.coupon
 }
 

@@ -1,8 +1,8 @@
-package entity_test
+package coupon_test
 
 import (
 	"fmt"
-	"pc-shop-final-project/domain/entity"
+	"pc-shop-final-project/domain/entity/coupon"
 	"testing"
 )
 
@@ -14,17 +14,17 @@ var (
 )
 
 func TestNewCoupon1(t *testing.T) {
-	fmt.Println(entity.AutoGenerateCoupon(randy, "Randy"))
+	fmt.Println(coupon.AutoGenerateCoupon(randy, "Randy"))
 }
 
 func TestNewCoupon2(t *testing.T) {
-	fmt.Println(entity.AutoGenerateCoupon(donny, "Donny"))
+	fmt.Println(coupon.AutoGenerateCoupon(donny, "Donny"))
 }
 
 func TestNewCoupon3(t *testing.T) {
-	fmt.Println(entity.AutoGenerateCoupon(rika, "Rika"))
+	fmt.Println(coupon.AutoGenerateCoupon(rika, "Rika"))
 }
 
 func TestNewCoupon4(t *testing.T) {
-	fmt.Println(entity.AutoGenerateCoupon(monna, "Monna"))
+	fmt.Println(coupon.AutoGenerateCoupon(monna, "Monna"))
 }

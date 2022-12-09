@@ -3,7 +3,7 @@ package mysql
 import (
 	"context"
 	"database/sql"
-	"pc-shop-final-project/domain/entity"
+	"pc-shop-final-project/domain/entity/coupon"
 	_interface "pc-shop-final-project/domain/repository"
 	"time"
 )
@@ -17,7 +17,7 @@ func NewCouponMysql(db *sql.DB) _interface.InterfaceCoupon {
 }
 
 // CreateCoupon implements _interface.InterfaceCoupon
-func (cpn *CouponMysqlInteractor) CreateCoupon(ctx context.Context, coupon *entity.Coupon, uniqcoupon []*entity.UniqCoupon) error {
+func (cpn *CouponMysqlInteractor) CreateCoupon(ctx context.Context, coupon *coupon.Coupon, uniqcoupon []*coupon.UniqCoupon) error {
 	var (
 		errMysql error
 	)
@@ -83,7 +83,7 @@ func (cpn *CouponMysqlInteractor) DeleteCoupon(ctx context.Context, id int) erro
 }
 
 // ReadCoupon implements _interface.InterfaceCoupon
-func (cpn *CouponMysqlInteractor) ReadCoupon(ctx context.Context) ([]*entity.Coupon, []*entity.UniqCoupon, error) {
+func (cpn *CouponMysqlInteractor) ReadCoupon(ctx context.Context) ([]*coupon.Coupon, []*coupon.UniqCoupon, error) {
 	var (
 		errMysql error
 	)
@@ -97,7 +97,7 @@ func (cpn *CouponMysqlInteractor) ReadCoupon(ctx context.Context) ([]*entity.Cou
 		return nil, nil, errMysql
 	}
 
-	listUniqCoupon := make([]*entity.UniqCoupon, 0)
+	listUniqCoupon := make([]*coupon.UniqCoupon, 0)
 	for rows.Next() {
 		var (
 			ID_COUPON         int
@@ -110,7 +110,7 @@ func (cpn *CouponMysqlInteractor) ReadCoupon(ctx context.Context) ([]*entity.Cou
 			return nil, nil, errScan
 		}
 
-		uniqCoupon := entity.FetchUniqCoupon(&entity.DTOUniqCoupon{
+		uniqCoupon := coupon.FetchUniqCoupon(&coupon.DTOUniqCoupon{
 			Id:     ID_COUPON,
 			UniqId: UNIQ_ID,
 			Status: ACTIVE_USE_STATUS,
@@ -125,7 +125,7 @@ func (cpn *CouponMysqlInteractor) ReadCoupon(ctx context.Context) ([]*entity.Cou
 		return nil, nil, errMysql
 	}
 
-	listCoupon := make([]*entity.Coupon, 0)
+	listCoupon := make([]*coupon.Coupon, 0)
 	for rows.Next() {
 		var (
 			ID_COUPON          int
@@ -140,7 +140,7 @@ func (cpn *CouponMysqlInteractor) ReadCoupon(ctx context.Context) ([]*entity.Cou
 			return nil, nil, errScan
 		}
 
-		listMatchUniqCoupon := make([]entity.UniqCoupon, 0)
+		listMatchUniqCoupon := make([]coupon.UniqCoupon, 0)
 
 		for _, matchCoupon := range listUniqCoupon {
 			if matchCoupon.GetValueIdCoupon() == ID_COUPON {
@@ -148,7 +148,7 @@ func (cpn *CouponMysqlInteractor) ReadCoupon(ctx context.Context) ([]*entity.Cou
 			}
 		}
 
-		coupon := entity.FetchCoupon(&entity.DTOCoupon{
+		coupon := coupon.FetchCoupon(&coupon.DTOCoupon{
 			Id:         ID_COUPON,
 			IdCustomer: ID_CUSTOMER,
 			UniqCoupon: listMatchUniqCoupon,

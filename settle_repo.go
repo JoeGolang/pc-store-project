@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"pc-shop-final-project/domain/entity"
+	"pc-shop-final-project/domain/entity/coupon"
 	_interface "pc-shop-final-project/domain/repository"
 	"time"
 )
@@ -101,7 +102,7 @@ func (set *SettleMysqlInteractor) ReadSettle(ctx context.Context) ([]*entity.Set
 			User:       entity.User{},
 			Customer:   entity.Customer{},
 			Product:    []entity.Inventory{},
-			Coupon:     entity.Coupon{},
+			Coupon:     coupon.Coupon{},
 			TotalPrice: TOTAL_PRICE,
 			StatusTrns: STATUS_TRANSACTION,
 		})

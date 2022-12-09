@@ -2,12 +2,12 @@ package _interface
 
 import (
 	"context"
-	"pc-shop-final-project/domain/entity"
+	"pc-shop-final-project/domain/entity/coupon"
 )
 
 type InterfaceCoupon interface {
-	CreateCoupon(ctx context.Context, coupon *entity.Coupon, uniqcoupon []*entity.UniqCoupon) error
-	ReadCoupon(ctx context.Context) ([]*entity.Coupon, []*entity.UniqCoupon, error)
+	CreateCoupon(ctx context.Context, coupon *coupon.Coupon, uniqcoupon []*coupon.UniqCoupon) error
+	ReadCoupon(ctx context.Context) ([]*coupon.Coupon, []*coupon.UniqCoupon, error)
 	UpdateCoupon(ctx context.Context, uniqId string) error
 	DeleteCoupon(ctx context.Context, id int) error
 }

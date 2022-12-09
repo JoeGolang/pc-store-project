@@ -3,7 +3,7 @@ package handler
 import (
 	"context"
 	"fmt"
-	"pc-shop-final-project/domain/entity"
+	"pc-shop-final-project/domain/entity/coupon"
 	_interface "pc-shop-final-project/domain/repository"
 	"pc-shop-final-project/internal/repository/mysql"
 )
@@ -23,14 +23,14 @@ func NewCouponHandler(Repo _interface.InterfaceCoupon) *CouponInteractor {
 	}
 }
 
-func CreateCoupon(ctx context.Context, coupon *entity.Coupon, UC []*entity.UniqCoupon) {
+func CreateCoupon(ctx context.Context, coupon *coupon.Coupon, UC []*coupon.UniqCoupon) {
 	err := HandlerCoupon.repository.CreateCoupon(ctx, coupon, UC)
 	if err != nil {
 		fmt.Println(err)
 	}
 }
 
-func ReadCoupon(ctx context.Context) ([]*entity.Coupon, []*entity.UniqCoupon) {
+func ReadCoupon(ctx context.Context) ([]*coupon.Coupon, []*coupon.UniqCoupon) {
 	Coupons, UCs, err := HandlerCoupon.repository.ReadCoupon(ctx)
 	if err != nil {
 		fmt.Println(err)
