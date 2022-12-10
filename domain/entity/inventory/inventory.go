@@ -21,7 +21,7 @@ type DTOInventory struct {
 	Category    string
 }
 
-func NewInventory(inven *DTOInventory) (*Inventory, error) {
+func NewInventory(inven DTOInventory) (*Inventory, error) {
 	if inven.ProductName == "" {
 		return nil, errors.New("product name cannot be empty")
 	}

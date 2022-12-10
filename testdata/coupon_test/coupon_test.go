@@ -1,4 +1,4 @@
-package testdata_test
+package coupon_test_test
 
 import (
 	"fmt"

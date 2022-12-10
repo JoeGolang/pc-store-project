@@ -1,4 +1,4 @@
-package testdata
+package customer
 
 import "pc-shop-final-project/domain/entity"
 

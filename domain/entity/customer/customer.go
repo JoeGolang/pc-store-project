@@ -18,7 +18,7 @@ type DTOCustomer struct {
 	JoinDate string
 }
 
-func NewCustomer(cust *DTOCustomer, store string) (*Customer, error) {
+func NewCustomer(cust DTOCustomer, store string) (*Customer, error) {
 	var timeJoinDate time.Time
 
 	if cust.Name == "" {
