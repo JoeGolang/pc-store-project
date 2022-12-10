@@ -2,9 +2,9 @@ package settlement
 
 import (
 	"errors"
-	"pc-shop-final-project"
 	"pc-shop-final-project/domain/entity/coupon"
 	customer2 "pc-shop-final-project/domain/entity/customer"
+	"pc-shop-final-project/domain/entity/inventory"
 	user2 "pc-shop-final-project/domain/entity/user"
 	"strconv"
 	"time"
@@ -15,7 +15,7 @@ type Settlement struct {
 	code       string
 	user       user2.User
 	customer   customer2.Customer
-	product    []dummy.Inventory
+	product    []inventory.DTOInventory
 	coupon     coupon.Coupon
 	totalPrice int
 	statusTrns bool
@@ -26,7 +26,7 @@ type DTOSettlement struct {
 	Code       string
 	User       user2.User
 	Customer   customer2.Customer
-	Product    []dummy.Inventory
+	Product    []inventory.DTOInventory
 	Coupon     coupon.Coupon
 	TotalPrice int
 	StatusTrns bool
@@ -39,13 +39,13 @@ type SettlePurchase struct {
 }
 
 func NewSettlement(set DTOSettlement) (*Settlement, error) {
-	inven := dummy.Inventory{}
-	inventories := make([]dummy.Inventory, 0)
+	inven := inventory.DTOInventory{}
+	inventories := make([]inventory.DTOInventory, 0)
 	for _, inv := range set.Product {
-		inven.id = inv.id
-		inven.productName = inv.productName
-		inven.brand = inv.brand
-		inven.category = inv.category
+		inven.Id = inv.Id
+		inven.ProductName = inv.ProductName
+		inven.Brand = inv.Brand
+		inven.Category = inv.Category
 		inventories = append(inventories, inven)
 	}
 
@@ -92,7 +92,7 @@ func (sett *Settlement) GetValueCouponSett() *coupon.Coupon {
 	return &sett.coupon
 }
 
-func (sett *Settlement) GetValueProductSett() *[]dummy.Inventory {
+func (sett *Settlement) GetValueProductSett() *[]inventory.DTOInventory {
 	return &sett.product
 }
 

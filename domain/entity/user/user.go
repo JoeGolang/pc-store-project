@@ -19,7 +19,7 @@ type DTOUser struct {
 	Status     string
 }
 
-func NewUser(usr *DTOUser) (*User, error) {
+func NewUser(usr DTOUser) (*User, error) {
 	if usr.Name == "" {
 		return nil, errors.New("name cannot be empty")
 	}
@@ -33,7 +33,7 @@ func NewUser(usr *DTOUser) (*User, error) {
 	}
 
 	if len([]rune(usr.OutletCode)) != 4 {
-		return nil, errors.New("user code must 4 characters")
+		return nil, errors.New("outlet code code must 4 characters")
 	}
 
 	if usr.Status == "" {
