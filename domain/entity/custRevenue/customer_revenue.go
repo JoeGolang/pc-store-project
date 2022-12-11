@@ -1,4 +1,4 @@
-package usecase
+package custRevenue
 
 import (
 	"pc-shop-final-project/domain/entity/settlement"
@@ -12,7 +12,13 @@ type CustomerRevenue struct {
 	dateTransaction time.Time
 }
 
-func NewCustomerRevenue(idCust string, settle []*settlement.Settlement) []*CustomerRevenue {
+type DTOCustomerRevenue struct {
+	IdCustomer      string
+	Revenue         int
+	DateTransaction time.Time
+}
+
+func NewCustomerRevenue(idCust string, settle []*settlement.Settlement) ([]*CustomerRevenue, []*CustomerRevenue) {
 	var (
 		timeTransactionDate time.Time
 		revenue             int
@@ -21,11 +27,11 @@ func NewCustomerRevenue(idCust string, settle []*settlement.Settlement) []*Custo
 	custRev := make([]*CustomerRevenue, 0)
 
 	for _, set := range settle {
-		if set.customer.uniqId == idCust {
-			settleCode := []rune(set.code)
+		if set.GetValueCustomerSett().GetValueUniqIdCust() == idCust {
+			settleCode := []rune(set.GetValueCodeSett())
 			dateSettle := string(settleCode[8]) + string(settleCode[9]) + string(settleCode[10]) + string(settleCode[11]) + string(settleCode[12]) + string(settleCode[13])
 			timeTransactionDate, _ = time.Parse("020106", dateSettle)
-			revenue = set.totalPrice
+			revenue = set.GetValueTotalPriceSett()
 		}
 	}
 
@@ -42,7 +48,7 @@ func NewCustomerRevenue(idCust string, settle []*settlement.Settlement) []*Custo
 		custRev = append(custRev, cr)
 	}
 
-	return custRev
+	return custRev, nil
 }
 
 func (cr *CustomerRevenue) GetValueIdCustCR() string {

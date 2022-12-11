@@ -3,7 +3,7 @@ package mysql
 import (
 	"context"
 	"database/sql"
-	"pc-shop-final-project/domain/entity"
+	"pc-shop-final-project/domain/entity/inventory"
 	_interface "pc-shop-final-project/domain/repository"
 	"time"
 )
@@ -17,7 +17,7 @@ func NewInventoryMysql(db *sql.DB) _interface.InterfaceInventory {
 }
 
 // CreateInventory implements _interface.InterfaceInventory
-func (inven *InventoryMysqlInteractor) CreateInventory(ctx context.Context, inv *entity.Inventory) error {
+func (inven *InventoryMysqlInteractor) CreateInventory(ctx context.Context, inv *inventory.Inventory) error {
 	var (
 		errMysql error
 	)
@@ -64,7 +64,7 @@ func (inven *InventoryMysqlInteractor) DeleteInventory(ctx context.Context, id i
 }
 
 // ReadInventory implements _interface.InterfaceInventory
-func (inven *InventoryMysqlInteractor) ReadInventory(ctx context.Context) ([]*entity.Inventory, error) {
+func (inven *InventoryMysqlInteractor) ReadInventory(ctx context.Context) ([]*inventory.Inventory, error) {
 	var (
 		errMysql error
 	)
@@ -78,7 +78,7 @@ func (inven *InventoryMysqlInteractor) ReadInventory(ctx context.Context) ([]*en
 		return nil, errMysql
 	}
 
-	listInventory := make([]*entity.Inventory, 0)
+	listInventory := make([]*inventory.Inventory, 0)
 	for rows.Next() {
 		var (
 			ID_PRODUCT   int
@@ -93,7 +93,7 @@ func (inven *InventoryMysqlInteractor) ReadInventory(ctx context.Context) ([]*en
 			return nil, errScan
 		}
 
-		inventory, errFetch := entity.NewInventory(&entity.DTOInventory{
+		inventory, errFetch := inventory.NewInventory(inventory.DTOInventory{
 			Id:          ID_PRODUCT,
 			ProductName: PRODUCT_NAME,
 			Brand:       BRAND,

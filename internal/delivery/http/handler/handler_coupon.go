@@ -3,14 +3,14 @@ package handler
 import (
 	"context"
 	"fmt"
-	"pc-shop-final-project"
 	"pc-shop-final-project/domain/entity/coupon"
 	_interface "pc-shop-final-project/domain/repository"
 	"pc-shop-final-project/internal/repository/mysql"
+	mysqlCon "pc-shop-final-project/pkg/mysql_connection"
 )
 
 var (
-	repoCouponMysql = mysql.NewCouponMysql(dummy.mysqlConnection)
+	repoCouponMysql = mysql.NewCouponMysql(mysqlCon.InitMysqlDB())
 	HandlerCoupon   = NewCouponHandler(repoCouponMysql)
 )
 

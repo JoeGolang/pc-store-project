@@ -3,7 +3,7 @@ package mysql
 import (
 	"context"
 	"database/sql"
-	"pc-shop-final-project/domain/entity"
+	"pc-shop-final-project/domain/entity/customer"
 	_interface "pc-shop-final-project/domain/repository"
 	"time"
 )
@@ -17,7 +17,7 @@ func NewCustomerMysql(db *sql.DB) _interface.InterfaceCustomer {
 }
 
 // CreateCustomer implements _interface.InterfaceCustomer
-func (cst *CustomerMysqlInteractor) CreateCustomer(ctx context.Context, cust *entity.Customer) error {
+func (cst *CustomerMysqlInteractor) CreateCustomer(ctx context.Context, cust *customer.Customer) error {
 	var (
 		errMysql error
 	)
@@ -64,7 +64,7 @@ func (cst *CustomerMysqlInteractor) DeleteCustomer(ctx context.Context, uniqId s
 }
 
 // ReadCustomer implements _interface.InterfaceCustomer
-func (cst *CustomerMysqlInteractor) ReadCustomer(ctx context.Context) ([]*entity.Customer, error) {
+func (cst *CustomerMysqlInteractor) ReadCustomer(ctx context.Context) ([]*customer.Customer, error) {
 	var (
 		errMysql error
 	)
@@ -78,7 +78,7 @@ func (cst *CustomerMysqlInteractor) ReadCustomer(ctx context.Context) ([]*entity
 		return nil, errMysql
 	}
 
-	listCustomer := make([]*entity.Customer, 0)
+	listCustomer := make([]*customer.Customer, 0)
 	for rows.Next() {
 		var (
 			UNIQ_ID   string
@@ -91,11 +91,11 @@ func (cst *CustomerMysqlInteractor) ReadCustomer(ctx context.Context) ([]*entity
 			return nil, errScan
 		}
 
-		customer, errFetch := entity.NewCustomer(&entity.DTOCustomer{
+		customer, errFetch := customer.NewCustomer(customer.DTOCustomer{
 			UniqId:   UNIQ_ID,
 			Name:     NAME,
 			JoinDate: JOIN_DATE,
-		}, "")
+		}, "manggadua")
 
 		if errFetch != nil {
 			return nil, errFetch

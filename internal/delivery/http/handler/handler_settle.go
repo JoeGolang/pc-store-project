@@ -3,12 +3,10 @@ package handler
 import (
 	"context"
 	"fmt"
-	"pc-shop-final-project/domain/entity"
+	"pc-shop-final-project/domain/entity/settlement"
 	_interface "pc-shop-final-project/domain/repository"
-	sqlConn "pc-shop-final-project/internal/config/database/mysql"
 	"pc-shop-final-project/internal/repository/mysql"
-
-	_ "github.com/go-sql-driver/mysql"
+	sqlConn "pc-shop-final-project/pkg/mysql_connection"
 )
 
 var (
@@ -27,14 +25,14 @@ func NewSettleHandler(Repo _interface.InterfaceSettlement) *SettleInteractor {
 	}
 }
 
-func CreateSettle(ctx context.Context, idUser int, idCustomer int, idCoupon int, settle *entity.Settlement) {
+func CreateSettle(ctx context.Context, idUser int, idCustomer int, idCoupon int, settle *settlement.Settlement) {
 	err := HandlerSettle.repository.CreateSettle(ctx, idUser, idCustomer, idCoupon, settle)
 	if err != nil {
 		fmt.Println(err)
 	}
 }
 
-func ReadSettle(ctx context.Context) []*entity.Settlement {
+func ReadSettle(ctx context.Context) []*settlement.Settlement {
 	settlements, err := HandlerSettle.repository.ReadSettle(ctx)
 	if err != nil {
 		fmt.Println(err)

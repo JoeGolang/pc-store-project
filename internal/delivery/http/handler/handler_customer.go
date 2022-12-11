@@ -3,7 +3,7 @@ package handler
 import (
 	"context"
 	"fmt"
-	"pc-shop-final-project/domain/entity"
+	"pc-shop-final-project/domain/entity/customer"
 	_interface "pc-shop-final-project/domain/repository"
 	"pc-shop-final-project/internal/repository/mysql"
 )
@@ -23,14 +23,14 @@ func NewCustomerHandler(Repo _interface.InterfaceCustomer) *CustomerInteractor {
 	}
 }
 
-func CreateCustomer(ctx context.Context, cust *entity.Customer) {
+func CreateCustomer(ctx context.Context, cust *customer.Customer) {
 	err := HandlerCustomer.repository.CreateCustomer(ctx, cust)
 	if err != nil {
 		fmt.Println(err)
 	}
 }
 
-func ReadCustomer(ctx context.Context) []*entity.Customer {
+func ReadCustomer(ctx context.Context) []*customer.Customer {
 	customers, err := HandlerCustomer.repository.ReadCustomer(ctx)
 	if err != nil {
 		fmt.Println(err)

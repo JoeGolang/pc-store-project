@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
-	dummy "pc-shop-final-project/docs"
-	handler "pc-shop-final-project/internal/repository/controller"
+	"pc-shop-final-project/internal/delivery/http/handler"
+	"pc-shop-final-project/testdata/dummy"
 )
 
 func main() {

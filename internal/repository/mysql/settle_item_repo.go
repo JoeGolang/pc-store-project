@@ -3,7 +3,7 @@ package mysql
 import (
 	"context"
 	"database/sql"
-	"pc-shop-final-project/domain/entity"
+	"pc-shop-final-project/domain/entity/settlement"
 	_interface "pc-shop-final-project/domain/repository"
 	"time"
 )
@@ -17,7 +17,7 @@ func NewSettlePurchaseMysql(db *sql.DB) _interface.InterfaceSettlementItem {
 }
 
 // CreatePurchase implements _interface.InterfaceSettlementItem
-func (set *SettleItemMysqlInteractor) CreatePurchase(ctx context.Context, purchase []*entity.SettlePurchase) error {
+func (set *SettleItemMysqlInteractor) CreatePurchase(ctx context.Context, purchase []*settlement.SettlePurchase) error {
 	var (
 		errMysql error
 	)
@@ -65,7 +65,7 @@ func (set *SettleItemMysqlInteractor) DeletePurchase(ctx context.Context, codeIt
 }
 
 // ReadPurchase implements _interface.InterfaceSettlementItem
-func (set *SettleItemMysqlInteractor) ReadPurchase(ctx context.Context) ([]*entity.SettlePurchase, error) {
+func (set *SettleItemMysqlInteractor) ReadPurchase(ctx context.Context) ([]*settlement.SettlePurchase, error) {
 	var (
 		errMysql error
 	)
@@ -79,7 +79,7 @@ func (set *SettleItemMysqlInteractor) ReadPurchase(ctx context.Context) ([]*enti
 		return nil, errMysql
 	}
 
-	listSettleP := make([]*entity.SettlePurchase, 0)
+	listSettleP := make([]*settlement.SettlePurchase, 0)
 	for rows.Next() {
 		var (
 			ID_SETTLEMENT int
@@ -92,7 +92,7 @@ func (set *SettleItemMysqlInteractor) ReadPurchase(ctx context.Context) ([]*enti
 			return nil, errScan
 		}
 
-		setP := entity.NewSettlePurchase(ID_SETTLEMENT, ID_ITEM, QTY)
+		setP := settlement.NewSettlePurchase(ID_SETTLEMENT, ID_ITEM, QTY)
 
 		listSettleP = append(listSettleP, setP)
 	}

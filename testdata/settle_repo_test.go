@@ -1,10 +1,10 @@
-package customer_test
+package settle_repo_test
 
 import (
 	"context"
 	"fmt"
-	"pc-shop-final-project/domain/entity"
-	handler "pc-shop-final-project/internal/repository/controller"
+	"pc-shop-final-project/domain/entity/settlement"
+	"pc-shop-final-project/internal/delivery/http/handler"
 	"testing"
 )
 
@@ -13,7 +13,7 @@ func TestCreateSettleMysql(t *testing.T) {
 		ctx = context.Background()
 	)
 
-	settlement, err := entity.NewSettlement(entity.DTOSettlement{
+	settlement, err := settlement.NewSettlement(settlement.DTOSettlement{
 		TotalPrice: 32000000,
 	})
 

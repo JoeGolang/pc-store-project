@@ -3,7 +3,7 @@ package mysql
 import (
 	"context"
 	"database/sql"
-	"pc-shop-final-project/domain/entity"
+	user2 "pc-shop-final-project/domain/entity/user"
 	_interface "pc-shop-final-project/domain/repository"
 	"time"
 )
@@ -17,7 +17,7 @@ func NewUserMysql(db *sql.DB) _interface.InterfaceUser {
 }
 
 // CreateUser implements _interface.InterfaceUser
-func (usr *UserMysqlInteractor) CreateUser(ctx context.Context, user *entity.User) error {
+func (usr *UserMysqlInteractor) CreateUser(ctx context.Context, user *user2.User) error {
 	var (
 		errMysql error
 	)
@@ -64,7 +64,7 @@ func (usr *UserMysqlInteractor) DeleteUser(ctx context.Context, id int) error {
 }
 
 // ReadUser implements _interface.InterfaceUser
-func (usr *UserMysqlInteractor) ReadUser(ctx context.Context) ([]*entity.User, error) {
+func (usr *UserMysqlInteractor) ReadUser(ctx context.Context) ([]*user2.User, error) {
 	var (
 		errMysql error
 	)
@@ -78,7 +78,7 @@ func (usr *UserMysqlInteractor) ReadUser(ctx context.Context) ([]*entity.User, e
 		return nil, errMysql
 	}
 
-	listUser := make([]*entity.User, 0)
+	listUser := make([]*user2.User, 0)
 	for rows.Next() {
 		var (
 			ID_USER     int
@@ -92,7 +92,7 @@ func (usr *UserMysqlInteractor) ReadUser(ctx context.Context) ([]*entity.User, e
 			return nil, errScan
 		}
 
-		user, errFetch := entity.NewUser(&entity.DTOUser{
+		user, errFetch := user2.NewUser(user2.DTOUser{
 			Id:         ID_USER,
 			Name:       NAME,
 			OutletCode: OUTLET_CODE,

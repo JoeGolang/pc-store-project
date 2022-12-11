@@ -3,8 +3,11 @@ package mysql
 import (
 	"context"
 	"database/sql"
-	"pc-shop-final-project/domain/entity"
 	"pc-shop-final-project/domain/entity/coupon"
+	"pc-shop-final-project/domain/entity/customer"
+	"pc-shop-final-project/domain/entity/inventory"
+	"pc-shop-final-project/domain/entity/settlement"
+	user2 "pc-shop-final-project/domain/entity/user"
 	_interface "pc-shop-final-project/domain/repository"
 	"time"
 )
@@ -18,7 +21,7 @@ func NewSettleMysql(db *sql.DB) _interface.InterfaceSettlement {
 }
 
 // CreateSettle implements _interface.InterfaceSettlement
-func (set *SettleMysqlInteractor) CreateSettle(ctx context.Context, idUser int, idCustomer int, idCoupon int, settle *entity.Settlement) error {
+func (set *SettleMysqlInteractor) CreateSettle(ctx context.Context, idUser int, idCustomer int, idCoupon int, settle *settlement.Settlement) error {
 	var (
 		errMysql error
 	)
@@ -65,7 +68,7 @@ func (set *SettleMysqlInteractor) DeleteSettle(ctx context.Context, code string)
 }
 
 // ReadSettle implements _interface.InterfaceSettlement
-func (set *SettleMysqlInteractor) ReadSettle(ctx context.Context) ([]*entity.Settlement, error) {
+func (set *SettleMysqlInteractor) ReadSettle(ctx context.Context) ([]*settlement.Settlement, error) {
 	var (
 		errMysql error
 	)
@@ -79,7 +82,7 @@ func (set *SettleMysqlInteractor) ReadSettle(ctx context.Context) ([]*entity.Set
 		return nil, errMysql
 	}
 
-	listSettlement := make([]*entity.Settlement, 0)
+	listSettlement := make([]*settlement.Settlement, 0)
 	for rows.Next() {
 		var (
 			ID                 int
@@ -96,12 +99,12 @@ func (set *SettleMysqlInteractor) ReadSettle(ctx context.Context) ([]*entity.Set
 			return nil, errScan
 		}
 
-		set, errFetch := entity.NewSettlement(entity.DTOSettlement{
+		set, errFetch := settlement.NewSettlement(settlement.DTOSettlement{
 			Id:         ID,
 			Code:       CODE_TRANSACTION,
-			User:       entity.User{},
-			Customer:   entity.Customer{},
-			Product:    []entity.Inventory{},
+			User:       user2.User{},
+			Customer:   customer.Customer{},
+			Product:    []inventory.DTOInventory{},
 			Coupon:     coupon.Coupon{},
 			TotalPrice: TOTAL_PRICE,
 			StatusTrns: STATUS_TRANSACTION,
