@@ -3,6 +3,7 @@ package mysql_connection
 import (
 	"database/sql"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"net/url"
 	"time"
 )
@@ -16,8 +17,8 @@ func InitMysqlDB() *sql.DB {
 	dbHost := "localhost"
 	dbPort := "3306"
 	dbUser := "root"
-	dbPass := ""
-	dbName := "shop_databse"
+	dbPass := "gamestore123"
+	dbName := "shop_database"
 
 	connection := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPass, dbHost, dbPort, dbName)
 	val := url.Values{}

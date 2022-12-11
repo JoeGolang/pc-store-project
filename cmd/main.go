@@ -3,20 +3,22 @@ package main
 import (
 	"context"
 	"fmt"
-	"pc-shop-final-project/internal/delivery/http/handler"
+	handler2 "pc-shop-final-project/internal/delivery/http/handler"
 	"pc-shop-final-project/testdata/dummy"
 )
 
 func main() {
+
 	var (
 		ctx = context.Background()
 	)
 
 	dummyInventory := dummy.MakeDummyInventory()
 	for _, dumI := range dummyInventory {
-		handler.CreateInventory(ctx, dumI)
+		handler2.CreateInventory(ctx, dumI)
 	}
-	Inventories := handler.ReadInventory(ctx)
+	Inventories := handler2.ReadInventory(ctx)
+	fmt.Println(Inventories)
 	for _, inv := range Inventories {
 		fmt.Println(inv.GetValueIdInv())
 		fmt.Println(inv.GetValueProductNameInv())
@@ -50,4 +52,5 @@ func main() {
 	// 	fmt.Println(customer.GetValueJoinDateCust())
 	// 	fmt.Println("____________________")
 	// }
+	//}
 }

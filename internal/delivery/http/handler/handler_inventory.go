@@ -3,7 +3,7 @@ package handler
 import (
 	"context"
 	"fmt"
-	"pc-shop-final-project/domain/entity"
+	"pc-shop-final-project/domain/entity/inventory"
 	_interface "pc-shop-final-project/domain/repository"
 	"pc-shop-final-project/internal/repository/mysql"
 )
@@ -23,14 +23,14 @@ func NewInventoryHandler(Repo _interface.InterfaceInventory) *InventoryInteracto
 	}
 }
 
-func CreateInventory(ctx context.Context, inven *entity.Inventory) {
+func CreateInventory(ctx context.Context, inven *inventory.Inventory) {
 	err := HandlerInventory.repository.CreateInventory(ctx, inven)
 	if err != nil {
 		fmt.Println(err)
 	}
 }
 
-func ReadInventory(ctx context.Context) []*entity.Inventory {
+func ReadInventory(ctx context.Context) []*inventory.Inventory {
 	Inventories, err := HandlerInventory.repository.ReadInventory(ctx)
 	if err != nil {
 		fmt.Println(err)

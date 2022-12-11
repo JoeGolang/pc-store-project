@@ -3,7 +3,7 @@ package handler
 import (
 	"context"
 	"fmt"
-	"pc-shop-final-project/domain/entity"
+	user2 "pc-shop-final-project/domain/entity/user"
 	_interface "pc-shop-final-project/domain/repository"
 	"pc-shop-final-project/internal/repository/mysql"
 )
@@ -23,14 +23,14 @@ func NewUserHandler(Repo _interface.InterfaceUser) *UserInteractor {
 	}
 }
 
-func CreateUser(ctx context.Context, user *entity.User) {
+func CreateUser(ctx context.Context, user *user2.User) {
 	err := HandlerUser.repository.CreateUser(ctx, user)
 	if err != nil {
 		fmt.Println(err)
 	}
 }
 
-func ReadUser(ctx context.Context) []*entity.User {
+func ReadUser(ctx context.Context) []*user2.User {
 	Users, err := HandlerUser.repository.ReadUser(ctx)
 	if err != nil {
 		fmt.Println(err)
