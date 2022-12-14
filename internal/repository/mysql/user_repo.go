@@ -3,8 +3,12 @@ package mysql
 import (
 	"context"
 	"database/sql"
+	"errors"
+	"fmt"
+	"github.com/rocketlaunchr/dbq/v2"
 	user2 "pc-shop-final-project/domain/entity/user"
-	_interface "pc-shop-final-project/domain/repository"
+	"pc-shop-final-project/internal/delivery/http/models"
+	"pc-shop-final-project/internal/repository/mysql/mapper"
 	"time"
 )
 
@@ -12,11 +16,39 @@ type UserMysqlInteractor struct {
 	db *sql.DB
 }
 
-func NewUserMysql(db *sql.DB) _interface.InterfaceUser {
+func (usr *UserMysqlInteractor) UpdateUserByKode(ctx context.Context, dataUser *user2.User, kodeUser string) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+// DeleteUser implements _interface.InterfaceUser
+func (usr *UserMysqlInteractor) DeleteUserById(ctx context.Context, id string) error {
+	var (
+		errMysql error
+	)
+
+	_, cancel := context.WithTimeout(ctx, 60*time.Second)
+	defer cancel()
+
+	deleteQuery := "DELETE FROM user WHERE ID_USER = ?"
+
+	_, errMysql = usr.db.Exec(deleteQuery, id)
+
+	if errMysql != nil {
+		return errMysql
+	}
+
+	return nil
+}
+
+func NewUserMysql(db *sql.DB) *UserMysqlInteractor {
 	return &UserMysqlInteractor{db: db}
 }
 
-// CreateUser implements _interface.InterfaceUser
+func (usr *UserMysqlInteractor) InsertDataUser(ctx context.Context, dataUser *user2.User) error {
+	//TODO implement me
+	panic("implement me")
+}
 func (usr *UserMysqlInteractor) CreateUser(ctx context.Context, user *user2.User) error {
 	var (
 		errMysql error
@@ -43,28 +75,8 @@ func (usr *UserMysqlInteractor) CreateUser(ctx context.Context, user *user2.User
 	return nil
 }
 
-// DeleteUser implements _interface.InterfaceUser
-func (usr *UserMysqlInteractor) DeleteUser(ctx context.Context, id int) error {
-	var (
-		errMysql error
-	)
-
-	_, cancel := context.WithTimeout(ctx, 60*time.Second)
-	defer cancel()
-
-	deleteQuery := "DELETE FROM user WHERE ID_USER = ?"
-
-	_, errMysql = usr.db.Exec(deleteQuery, id)
-
-	if errMysql != nil {
-		return errMysql
-	}
-
-	return nil
-}
-
 // ReadUser implements _interface.InterfaceUser
-func (usr *UserMysqlInteractor) ReadUser(ctx context.Context) ([]*user2.User, error) {
+func (usr *UserMysqlInteractor) GetListUser(ctx context.Context) ([]*user2.User, error) {
 	var (
 		errMysql error
 	)
@@ -108,4 +120,36 @@ func (usr *UserMysqlInteractor) ReadUser(ctx context.Context) ([]*user2.User, er
 	defer rows.Close()
 
 	return listUser, nil
+}
+
+// ReadUser by ID implements _interface.InterfaceUser
+func (usr *UserMysqlInteractor) GetUserById(ctx context.Context, id string) (*user2.User, error) {
+	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
+	defer cancel()
+
+	queryUser := fmt.Sprintf("SELECT * FROM %s WHERE ID_USER = ?", models.GetUserTableName())
+
+	opts := &dbq.Options{
+		SingleResult:   true,
+		ConcreteStruct: models.ModelUser{},
+		DecoderConfig:  dbq.StdTimeConversionConfig(),
+	}
+
+	resultUser, err := dbq.Q(ctx, usr.db, queryUser, opts, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if resultUser == nil {
+		return nil, errors.New("USER TIDAK DITEMUKAN")
+	}
+
+	user, errMap := mapper.UserModelToEntity(resultUser.(*models.ModelUser))
+
+	if errMap != nil {
+		return nil, errMap
+	}
+
+	return user, nil
 }

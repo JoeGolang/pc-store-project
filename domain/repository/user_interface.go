@@ -6,7 +6,9 @@ import (
 )
 
 type InterfaceUser interface {
-	CreateUser(ctx context.Context, user *user.User) error
-	ReadUser(ctx context.Context) ([]*user.User, error)
-	DeleteUser(ctx context.Context, id int) error
+	InsertDataUser(ctx context.Context, dataUser *user.User) error
+	GetListUser(ctx context.Context) ([]*user.User, error)
+	GetUserById(ctx context.Context, id string) (*user.User, error)
+	UpdateUserByKode(ctx context.Context, dataUser *user.User, kodeUser string) error
+	DeleteUserById(ctx context.Context, id string) error
 }

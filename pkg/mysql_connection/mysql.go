@@ -29,7 +29,7 @@ func InitMysqlDB() *sql.DB {
 	dbConn, errMysql = sql.Open(`mysql`, dsn)
 
 	if errMysql != nil {
-		panic(errMysql)
+		fmt.Printf("error connect")
 	}
 
 	dbConn.SetMaxOpenConns(300)

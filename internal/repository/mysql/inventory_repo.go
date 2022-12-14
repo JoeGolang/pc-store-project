@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"pc-shop-final-project/domain/entity/inventory"
-	_interface "pc-shop-final-project/domain/repository"
 	"time"
 )
 
@@ -12,8 +11,10 @@ type InventoryMysqlInteractor struct {
 	db *sql.DB
 }
 
-func NewInventoryMysql(db *sql.DB) _interface.InterfaceInventory {
-	return &InventoryMysqlInteractor{db: db}
+func NewInventoryMysql(db *sql.DB) *InventoryMysqlInteractor {
+	return &InventoryMysqlInteractor{
+		db: db,
+	}
 }
 
 // CreateInventory implements _interface.InterfaceInventory
