@@ -6,3 +6,9 @@ type RequestUser struct {
 	OUTLET_CODE string `json:"OUTLET_CODE"`
 	STATUS      string `json:"STATUS"`
 }
+
+type RequestCustomer struct {
+	UNIQ_ID   string `json:"UNIQ_ID"`
+	NAME      string `json:"NAME"`
+	JOIN_DATE string `json:"JOIN_DATE"`
+}

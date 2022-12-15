@@ -6,7 +6,8 @@ import (
 )
 
 type InterfaceCustomer interface {
-	CreateCustomer(ctx context.Context, cust *customer.Customer) error
-	ReadCustomer(ctx context.Context) ([]*customer.Customer, error)
+	InsertDataCustomer(ctx context.Context, cust *customer.Customer) error
+	GetListCustomer(ctx context.Context) ([]*customer.Customer, error)
 	DeleteCustomer(ctx context.Context, uniqId string) error
+	GetCustomerById(ctx context.Context, id string) (*customer.Customer, error)
 }

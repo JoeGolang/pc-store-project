@@ -30,11 +30,11 @@ func main() {
 	r.HandleFunc("/userupdate", ParamHandlerWithoutInput).Methods(http.MethodPut)
 	r.HandleFunc("/userdelete", ParamHandlerWithoutInput).Methods(http.MethodDelete)
 
-	r.HandleFunc("/custcreate", handlerCust.StoreDataCust).Methods(http.MethodPost)
-	r.HandleFunc("/cust", handlerCust.GetListCust).Methods(http.MethodGet)
-	r.HandleFunc("/cust/{id}", handlerCust.GetCustById).Methods(http.MethodGet)
-	r.HandleFunc("/custupdate", ParamHandlerWithoutInput).Methods(http.MethodPut)
-	r.HandleFunc("/custdelete", ParamHandlerWithoutInput).Methods(http.MethodDelete)
+	r.HandleFunc("/custcreate", handlerCust.StoreDataCustomer).Methods(http.MethodPost)
+	r.HandleFunc("/cust", handlerCust.GetListCustomer).Methods(http.MethodGet)
+	r.HandleFunc("/cust/{id}", handlerCust.GetCustomerById).Methods(http.MethodGet)
+	//r.HandleFunc("/custupdate", ParamHandlerWithoutInput).Methods(http.MethodPut)
+	//r.HandleFunc("/custdelete", ParamHandlerWithoutInput).Methods(http.MethodDelete)
 
 	fmt.Println("localhost:8080")
 	http.ListenAndServe(":8080", r)

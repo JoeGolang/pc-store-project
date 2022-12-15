@@ -27,14 +27,14 @@ type CustomReponseSingle struct {
 	Data   *ResponseUserJson
 }
 
-func MapResponseListUser(dataUser []*user.User, code int, message string) ([]byte, error) {
+func MapResponseListUser(dataUsers []*user.User, code int, message string) ([]byte, error) {
 	listRespUser := make([]*ResponseUserJson, 0)
-	for _, data := range dataUser {
+	for _, dataUser := range dataUsers {
 		respUser := &ResponseUserJson{
-			ID_USER:     data.GetValueIdUsr(),
-			NAME:        data.GetValueNameUsr(),
-			OUTLET_CODE: data.GetValueOutletCodeUsr(),
-			STATUS:      data.GetValueStatusUsr(),
+			ID_USER:     dataUser.GetValueIdUsr(),
+			NAME:        dataUser.GetValueNameUsr(),
+			OUTLET_CODE: dataUser.GetValueOutletCodeUsr(),
+			STATUS:      dataUser.GetValueStatusUsr(),
 		}
 		listRespUser = append(listRespUser, respUser)
 	}
