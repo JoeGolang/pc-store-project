@@ -72,16 +72,12 @@ func (usr *User) GetValueStatusUsr() string {
 
 func (us *User) SetUpdateData(req http_request.RequestUser) {
 	if req.ID_USER != 0 {
-		us.id() = req.ID_USER
+		us.id = req.ID_USER
 	}
 	if req.NAME != "" {
-		us.name() = req.NAME
+		us.name = req.NAME
 	}
 	if req.OUTLET_CODE != "" {
 		us.outletCode = req.OUTLET_CODE
 	}
-	if req.STATUS != "" {
-		us.status = req.STATUS
-	}
-
 }
