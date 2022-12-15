@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"net/http"
-	"pc-shop-final-project/internal/delivery/http/handler"
+	"pc-shop-final-project/internal/delivery/http/handler/custhandler"
+	"pc-shop-final-project/internal/delivery/http/handler/userhandler"
 	"pc-shop-final-project/internal/repository/mysql"
 	mysqlCon "pc-shop-final-project/pkg/mysql_connection"
 )
@@ -14,11 +15,13 @@ var (
 	ctx       = context.Background()
 	mysqlConn = mysqlCon.InitMysqlDB()
 	repoUser  = mysql.NewUserMysql(mysqlConn)
+	repoCust  = mysql.NewCustomerMysql(mysqlConn)
 )
 
 func main() {
 	r := mux.NewRouter()
-	handlerUser := handler.NewUserHandler(ctx, repoUser)
+	handlerUser := userhandler.NewUserHandler(ctx, repoUser)
+	handlerCust := custhandler.NewCustomerHandler(ctx, repoCust)
 
 	r.HandleFunc("/", ParamHandlerWithoutInput).Methods(http.MethodGet)
 	r.HandleFunc("/usercreate", handlerUser.StoreDataUser).Methods(http.MethodPost)
@@ -26,6 +29,12 @@ func main() {
 	r.HandleFunc("/user/{id}", handlerUser.GetUserById).Methods(http.MethodGet)
 	r.HandleFunc("/userupdate", ParamHandlerWithoutInput).Methods(http.MethodPut)
 	r.HandleFunc("/userdelete", ParamHandlerWithoutInput).Methods(http.MethodDelete)
+
+	r.HandleFunc("/custcreate", handlerCust.StoreDataCust).Methods(http.MethodPost)
+	r.HandleFunc("/cust", handlerCust.GetListCust).Methods(http.MethodGet)
+	r.HandleFunc("/cust/{id}", handlerCust.GetCustById).Methods(http.MethodGet)
+	r.HandleFunc("/custupdate", ParamHandlerWithoutInput).Methods(http.MethodPut)
+	r.HandleFunc("/custdelete", ParamHandlerWithoutInput).Methods(http.MethodDelete)
 
 	fmt.Println("localhost:8080")
 	http.ListenAndServe(":8080", r)

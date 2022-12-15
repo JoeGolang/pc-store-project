@@ -145,7 +145,7 @@ func (usr *UserMysqlInteractor) GetUserById(ctx context.Context, id string) (*us
 	return user, nil
 }
 
-func (usr *UserMysqlInteractor) UpdateUserById(ctx context.Context, dataUser *user2.User, idUser int) error {
+func (usr *UserMysqlInteractor) UpdateUserById(ctx context.Context, dataUser *user2.User, idUser string) error {
 	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
 	defer cancel()
 

@@ -1,4 +1,4 @@
-package handler
+package userhandler
 
 import (
 	"github.com/gorilla/mux"
@@ -6,7 +6,7 @@ import (
 	"pc-shop-final-project/internal/delivery/http/http_response"
 )
 
-func (usr *UserHandler) DeleteDataUser(w http.ResponseWriter, r *http.Request) {
+func (usr *handler.UserHandler) DeleteDataUser(w http.ResponseWriter, r *http.Request) {
 	var vars = mux.Vars(r)
 
 	dataUser, errGet := usr.repoUser.GetUserById(usr.ctx, vars["id"])
