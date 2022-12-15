@@ -16,11 +16,6 @@ type UserMysqlInteractor struct {
 	db *sql.DB
 }
 
-func (usr *UserMysqlInteractor) UpdateUserByKode(ctx context.Context, dataUser *user2.User, kodeUser string) error {
-	//TODO implement me
-	panic("implement me")
-}
-
 // DeleteUser implements _interface.InterfaceUser
 func (usr *UserMysqlInteractor) DeleteUserById(ctx context.Context, id string) error {
 	var (
@@ -148,4 +143,20 @@ func (usr *UserMysqlInteractor) GetUserById(ctx context.Context, id string) (*us
 	}
 
 	return user, nil
+}
+
+func (usr *UserMysqlInteractor) UpdateUserById(ctx context.Context, dataUser *user2.User, idUser int) error {
+	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
+	defer cancel()
+
+	query := fmt.Sprintf("UPDATE %s SET ID_USER = ?, NAME = ?, OUTLET_CODE = ?, STATUS = ? "+
+		"WHERE ID_USER = '%s'", models.GetUserTableName(), idUser)
+
+	_, err := dbq.E(ctx, usr.db, query, nil, mapper.UserEntityToDbqStruct(dataUser))
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
