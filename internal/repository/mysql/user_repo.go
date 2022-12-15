@@ -45,11 +45,7 @@ func NewUserMysql(db *sql.DB) *UserMysqlInteractor {
 	return &UserMysqlInteractor{db: db}
 }
 
-func (usr *UserMysqlInteractor) InsertDataUser(ctx context.Context, dataUser *user2.User) error {
-	//TODO implement me
-	panic("implement me")
-}
-func (usr *UserMysqlInteractor) CreateUser(ctx context.Context, user *user2.User) error {
+func (usr *UserMysqlInteractor) InsertDataUser(ctx context.Context, user *user2.User) error {
 	var (
 		errMysql error
 	)

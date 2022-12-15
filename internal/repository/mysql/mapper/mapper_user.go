@@ -1,44 +1,33 @@
 package mapper
 
 import (
+	"github.com/rocketlaunchr/dbq/v2"
 	user2 "pc-shop-final-project/domain/entity/user"
 	"pc-shop-final-project/internal/delivery/http/models"
 )
 
-//func DataBukuDbToEntity(dataDTO entity.DTOBuku) (*entity.Buku, error) {
-//	buku, err := entity.NewBuku(dataDTO)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	return buku, nil
-//}
-//
-//func DataPengarangDbToEntity(dataDTO entity.DTOPengarang) (*entity.Pengarang, error) {
-//	pengarang, err := entity.NewPengarang(dataDTO)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	return pengarang, nil
-//}
-//
-//func BukuEntityToModel(buku *entity.Buku) *models.ModelBuku {
-//	date, _ := time.Parse("2006-01-02", buku.GetTahunTerbit())
-//
-//	return &models.ModelBuku{
-//		IdPengarang: buku.GetIdPengarang(),
-//		Judul:       buku.GetJudul(),
-//		Category:    buku.GetCategory(),
-//		TahunTerbit: date,
-//		KodeBuku:    buku.GetKodeBuku(),
-//	}
-//}
-//
-//func BukuEntityToDbqStruct(buku *entity.Buku) []interface{} {
-//	dbqStruct := dbq.Struct(BukuEntityToModel(buku))
-//	return dbqStruct
-//}
+func DataUserDbToEntity(dataDTO user2.DTOUser) (*user2.User, error) {
+	user, err := user2.NewUser(dataDTO)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func UserEntityToModel(usr *user2.User) *models.ModelUser {
+	return &models.ModelUser{
+		ID_USER:     usr.GetValueIdUsr(),
+		NAME:        usr.GetValueNameUsr(),
+		OUTLET_CODE: usr.GetValueOutletCodeUsr(),
+		STATUS:      usr.GetValueStatusUsr(),
+	}
+}
+
+func UserEntityToDbqStruct(user *user2.User) []interface{} {
+	dbqStruct := dbq.Struct(UserEntityToModel(user))
+	return dbqStruct
+}
 
 func UserModelToEntity(model *models.ModelUser) (*user2.User, error) {
 	user, err := user2.NewUser(user2.DTOUser{

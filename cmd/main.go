@@ -21,11 +21,12 @@ func main() {
 	handlerUser := handler.NewUserHandler(ctx, repoUser)
 
 	r.HandleFunc("/", ParamHandlerWithoutInput).Methods(http.MethodGet)
-	//r.HandleFunc("/create-inventory", handlerInventory.Store)
-	r.HandleFunc("/list-user", handlerUser.GetListUser).Methods(http.MethodGet)
-	r.HandleFunc("/user/{id}", handlerUser.GetListUser).Methods(http.MethodGet)
+	r.HandleFunc("/usercreate", handlerUser.StoreDataUser).Methods(http.MethodPost)
+	r.HandleFunc("/user", handlerUser.GetListUser).Methods(http.MethodGet)
+	r.HandleFunc("/user/{id}", handlerUser.GetUserById).Methods(http.MethodGet)
+	r.HandleFunc("/userupdate", ParamHandlerWithoutInput).Methods(http.MethodPut)
+	r.HandleFunc("/userdelete", ParamHandlerWithoutInput).Methods(http.MethodDelete)
 
-	http.HandleFunc("/test", ParamHandlerWithoutInput)
 	fmt.Println("localhost:8080")
 	http.ListenAndServe(":8080", r)
 
