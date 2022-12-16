@@ -18,21 +18,16 @@ type UserMysqlInteractor struct {
 
 // DeleteUser implements _interface.InterfaceUser
 func (usr *UserMysqlInteractor) DeleteUserById(ctx context.Context, id string) error {
-	var (
-		errMysql error
-	)
-
-	_, cancel := context.WithTimeout(ctx, 60*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
 	defer cancel()
 
-	deleteQuery := "DELETE FROM user WHERE ID_USER = ?"
+	query := fmt.Sprintf("DELETE FROM %s WHERE ID_USER = ?", models.GetUserTableName())
 
-	_, errMysql = usr.db.Exec(deleteQuery, id)
+	_, err := dbq.E(ctx, usr.db, query, nil, id)
 
-	if errMysql != nil {
-		return errMysql
+	if err != nil {
+		return err
 	}
-
 	return nil
 }
 

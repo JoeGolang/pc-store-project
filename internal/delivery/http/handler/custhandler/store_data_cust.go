@@ -24,9 +24,9 @@ func (cs *CustomerHandler) StoreDataCustomer(w http.ResponseWriter, r *http.Requ
 	fmt.Println(req)
 
 	customer, err := customer2.NewCustomer(customer2.DTOCustomer{
-		UniqId:   req.UNIQ_ID,
-		Name:     req.NAME,
-		JoinDate: req.JOIN_DATE,
+		//UniqId:   req.UniqId,
+		Name: req.Name,
+		//JoinDate: req.JoinDate,
 	}, "BOGOR")
 
 	if err != nil {

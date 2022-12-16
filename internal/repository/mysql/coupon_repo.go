@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"pc-shop-final-project/domain/entity/coupon"
-	_interface "pc-shop-final-project/domain/repository"
 	"time"
 )
 
@@ -12,7 +11,7 @@ type CouponMysqlInteractor struct {
 	db *sql.DB
 }
 
-func NewCouponMysql(db *sql.DB) _interface.InterfaceCoupon {
+func NewCouponMysql(db *sql.DB) *CouponMysqlInteractor {
 	return &CouponMysqlInteractor{db: db}
 }
 

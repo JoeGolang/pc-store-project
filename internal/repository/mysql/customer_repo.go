@@ -144,18 +144,18 @@ func (cst *CustomerMysqlInteractor) GetCustomerById(ctx context.Context, id stri
 	return customer, nil
 }
 
-//func (usr *UserMysqlInteractor) UpdateUserById(ctx context.Context, dataUser *user2.User, idUser string) error {
-//	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
-//	defer cancel()
-//
-//	query := fmt.Sprintf("UPDATE %s SET ID_USER = ?, NAME = ?, OUTLET_CODE = ?, STATUS = ? "+
-//		"WHERE ID_USER = '%s'", models.GetUserTableName(), idUser)
-//
-//	_, err := dbq.E(ctx, usr.db, query, nil, mapper.UserEntityToDbqStruct(dataUser))
-//
-//	if err != nil {
-//		return err
-//	}
-//
-//	return nil
-//}
+func (cst *CustomerMysqlInteractor) UpdateCustomerById(ctx context.Context, dataCustomer *customer.Customer, idCust string) error {
+	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
+	defer cancel()
+
+	query := fmt.Sprintf("UPDATE %s SET ID_USER = ?, NAME = ?, OUTLET_CODE = ?, STATUS = ? "+
+		"WHERE UNIQ_ID = '%s'", models.GetCustomerTableName(), idCust)
+
+	_, err := dbq.E(ctx, cst.db, query, nil, mapper.CustomerEntityToDbqStruct(dataCustomer))
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

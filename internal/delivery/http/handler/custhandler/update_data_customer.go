@@ -1,4 +1,4 @@
-package userhandler
+package custhandler
 
 import (
 	"encoding/json"
@@ -8,9 +8,9 @@ import (
 	"pc-shop-final-project/internal/delivery/http/http_response"
 )
 
-func (usr *UserHandler) UpdateDataUser(w http.ResponseWriter, r *http.Request) {
+func (cs *CustomerHandler) UpdateDataCustomer(w http.ResponseWriter, r *http.Request) {
 	var (
-		req     http_request.RequestUser
+		req     http_request.RequestUpdCustomer
 		decoder = json.NewDecoder(r.Body)
 		vars    = mux.Vars(r)
 	)
@@ -22,23 +22,23 @@ func (usr *UserHandler) UpdateDataUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dataUser, errGet := usr.repoUser.GetUserById(usr.ctx, vars["idcust"])
+	dataCustomer, errGet := cs.repoCustomer.GetCustomerById(cs.ctx, vars["idcust"])
 	if errGet != nil {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte(errGet.Error()))
 		return
 	}
 
-	dataUser.SetUpdateData(req)
+	dataCustomer.SetUpdateDataCust(req)
 
-	errUpdate := usr.repoUser.UpdateUserById(usr.ctx, dataUser, vars["idcust"])
+	errUpdate := cs.repoCustomer.UpdateCustomerById(cs.ctx, dataCustomer, vars["idcust"])
 	if errUpdate != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(errUpdate.Error()))
 		return
 	}
 
-	resp, errMap := http_response.MapResponseUser(nil, http.StatusOK, "SUCCESS UPDATE DATA")
+	resp, errMap := http_response.MapResponseCustomer(nil, http.StatusOK, "SUCCESS UPDATE DATA")
 	if errMap != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(errMap.Error()))

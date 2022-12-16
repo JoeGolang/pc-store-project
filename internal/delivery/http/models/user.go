@@ -1,10 +1,10 @@
 package models
 
 type ModelUser struct {
-	ID_USER     int    `dbq:"ID_USER"`
-	NAME        string `dbq:"NAME"`
-	OUTLET_CODE string `dbq:"OUTLET_CODE"`
-	STATUS      string `dbq:"STATUS"`
+	Id     int    `dbq:"ID_USER"`
+	Name   string `dbq:"NAME"`
+	Outlet string `dbq:"OUTLET_CODE"`
+	Status string `dbq:"STATUS"`
 }
 
 func GetUserTableName() string {

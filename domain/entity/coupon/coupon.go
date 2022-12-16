@@ -36,7 +36,7 @@ type DTOUniqCoupon struct {
 	Status bool
 }
 
-func AutoGenerateCoupon(revenue int, idCust string) *Coupon {
+func AutoGenerateCoupon(revenue int, idCust string) (*Coupon, *Coupon) {
 	var (
 		uniqCoupon *UniqCoupon
 	)
@@ -83,7 +83,7 @@ func AutoGenerateCoupon(revenue int, idCust string) *Coupon {
 		generateDate:    generateTime,
 		prevShopRevenue: revenue,
 		active:          true,
-	}
+	}, nil
 }
 
 func (cpn *Coupon) GetValueIdCpn() int {

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"net/http"
-	"pc-shop-final-project/internal/delivery/http/handler/couponhandler"
 	"pc-shop-final-project/internal/delivery/http/handler/custhandler"
 	"pc-shop-final-project/internal/delivery/http/handler/userhandler"
 	"pc-shop-final-project/internal/repository/mysql"
@@ -24,23 +23,23 @@ func main() {
 	r := mux.NewRouter()
 	handlerUser := userhandler.NewUserHandler(ctx, repoUser)
 	handlerCust := custhandler.NewCustomerHandler(ctx, repoCust)
-	handlerCoupon := couponhandler.NewCouponHandler(ctx, repoCoupon)
+	//handlerCoupon := couponhandler.NewCouponHandler(ctx, repoCoupon)
 
 	r.HandleFunc("/", ParamHandlerWithoutInput).Methods(http.MethodGet)
 	r.HandleFunc("/usercreate", handlerUser.StoreDataUser).Methods(http.MethodPost)
 	r.HandleFunc("/user", handlerUser.GetListUser).Methods(http.MethodGet)
 	r.HandleFunc("/user/{id}", handlerUser.GetUserById).Methods(http.MethodGet)
-	r.HandleFunc("/userupdate", ParamHandlerWithoutInput).Methods(http.MethodPut)
-	r.HandleFunc("/userdelete", ParamHandlerWithoutInput).Methods(http.MethodDelete)
+	r.HandleFunc("/userupdate/{id}", handlerUser.UpdateDataUser).Methods(http.MethodPut)
+	r.HandleFunc("/userdelete/{id}", handlerUser.DeleteDataUser).Methods(http.MethodDelete)
 
 	r.HandleFunc("/custcreate", handlerCust.StoreDataCustomer).Methods(http.MethodPost)
 	r.HandleFunc("/cust", handlerCust.GetListCustomer).Methods(http.MethodGet)
 	r.HandleFunc("/cust/{id}", handlerCust.GetCustomerById).Methods(http.MethodGet)
-	//r.HandleFunc("/custupdate", ParamHandlerWithoutInput).Methods(http.MethodPut)
+	r.HandleFunc("/custupdate/{id}", handlerCust.UpdateDataCustomer).Methods(http.MethodPut)
 	//r.HandleFunc("/custdelete", ParamHandlerWithoutInput).Methods(http.MethodDelete)
 
-	r.HandleFunc("/coupon", handlerCoupon.GetListCoupon).Methods(http.MethodGet)
-	r.HandleFunc("/coupon/{id}", handlerCoupon.GetCouponById).Methods(http.MethodGet)
+	//r.HandleFunc("/coupon", handlerCoupon.GetListCoupon).Methods(http.MethodGet)
+	//r.HandleFunc("/coupon/{id}", handlerCoupon.GetCouponById).Methods(http.MethodGet)
 	//r.HandleFunc("/custupdate", ParamHandlerWithoutInput).Methods(http.MethodPut)
 	//r.HandleFunc("/custdelete", ParamHandlerWithoutInput).Methods(http.MethodDelete)
 

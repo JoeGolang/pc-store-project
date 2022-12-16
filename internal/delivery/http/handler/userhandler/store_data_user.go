@@ -24,10 +24,10 @@ func (usr *UserHandler) StoreDataUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(req)
 
 	user, err := user2.NewUser(user2.DTOUser{
-		Id:         req.ID_USER,
-		Name:       req.NAME,
-		OutletCode: req.OUTLET_CODE,
-		Status:     req.STATUS,
+		Id:         req.Id,
+		Name:       req.Name,
+		OutletCode: req.Outlet,
+		Status:     req.Status,
 	})
 
 	if err != nil {

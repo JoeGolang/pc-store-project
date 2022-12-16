@@ -17,10 +17,10 @@ func DataUserDbToEntity(dataDTO user2.DTOUser) (*user2.User, error) {
 
 func UserEntityToModel(usr *user2.User) *models.ModelUser {
 	return &models.ModelUser{
-		ID_USER:     usr.GetValueIdUsr(),
-		NAME:        usr.GetValueNameUsr(),
-		OUTLET_CODE: usr.GetValueOutletCodeUsr(),
-		STATUS:      usr.GetValueStatusUsr(),
+		Id:     usr.GetValueIdUsr(),
+		Name:   usr.GetValueNameUsr(),
+		Outlet: usr.GetValueOutletCodeUsr(),
+		Status: usr.GetValueStatusUsr(),
 	}
 }
 
@@ -31,10 +31,10 @@ func UserEntityToDbqStruct(user *user2.User) []interface{} {
 
 func UserModelToEntity(model *models.ModelUser) (*user2.User, error) {
 	user, err := user2.NewUser(user2.DTOUser{
-		Id:         model.ID_USER,
-		Name:       model.NAME,
-		OutletCode: model.OUTLET_CODE,
-		Status:     model.STATUS,
+		Id:         model.Id,
+		Name:       model.Name,
+		OutletCode: model.Outlet,
+		Status:     model.Status,
 	})
 
 	if err != nil {

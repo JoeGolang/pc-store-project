@@ -2,6 +2,7 @@ package customer
 
 import (
 	"errors"
+	"pc-shop-final-project/internal/delivery/http/http_request"
 	"strings"
 	"time"
 )
@@ -58,4 +59,14 @@ func (cust *Customer) GetValueNameCust() string {
 
 func (cust *Customer) GetValueJoinDateCust() string {
 	return cust.joinDate.Format("2006-01-02 15:04:05.")
+}
+
+func (cust *Customer) SetUpdateDataCust(req http_request.RequestUpdCustomer) {
+	if req.UniqId != "" {
+		cust.uniqId = req.UniqId
+	}
+	if req.Name != "" {
+		cust.name = req.Name
+	}
+
 }
