@@ -34,9 +34,9 @@ func main() {
 
 	r.HandleFunc("/custcreate", handlerCust.StoreDataCustomer).Methods(http.MethodPost)
 	r.HandleFunc("/cust", handlerCust.GetListCustomer).Methods(http.MethodGet)
-	r.HandleFunc("/cust/{id}", handlerCust.GetCustomerById).Methods(http.MethodGet)
-	r.HandleFunc("/custupdate/{id}", handlerCust.UpdateDataCustomer).Methods(http.MethodPut)
-	//r.HandleFunc("/custdelete", ParamHandlerWithoutInput).Methods(http.MethodDelete)
+	r.HandleFunc("/cust/{idcust}", handlerCust.GetCustomerById).Methods(http.MethodGet)
+	r.HandleFunc("/custupdate/{idcust}", handlerCust.UpdateDataCustomer).Methods(http.MethodPut)
+	r.HandleFunc("/custdelete/{idcust}", handlerCust.DeleteDataCustomer).Methods(http.MethodDelete)
 
 	//r.HandleFunc("/coupon", handlerCoupon.GetListCoupon).Methods(http.MethodGet)
 	//r.HandleFunc("/coupon/{id}", handlerCoupon.GetCouponById).Methods(http.MethodGet)

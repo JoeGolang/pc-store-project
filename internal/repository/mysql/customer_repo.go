@@ -48,20 +48,18 @@ func (cst *CustomerMysqlInteractor) InsertDataCustomer(ctx context.Context, cust
 }
 
 // DeleteCustomer implements _interface.InterfaceCustomer
-func (cst *CustomerMysqlInteractor) DeleteCustomer(ctx context.Context, uniqId string) error {
-	var (
-		errMysql error
-	)
-
-	_, cancel := context.WithTimeout(ctx, 60*time.Second)
+func (cst *CustomerMysqlInteractor) DeleteCustomer(ctx context.Context, idcust string) error {
+	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
 	defer cancel()
 
-	deleteQuery := "DELETE FROM customer WHERE UNIQ_ID = ?"
+	query := fmt.Sprintf("DELETE FROM %s WHERE UNIQ_ID = ?", models.GetCustomerTableName())
 
-	_, errMysql = cst.db.Exec(deleteQuery, uniqId)
+	_, err := dbq.E(ctx, cst.db, query, nil, idcust)
 
-	if errMysql != nil {
-		return errMysql
+	fmt.Println(idcust)
+
+	if err != nil {
+		return err
 	}
 
 	return nil
@@ -113,7 +111,7 @@ func (cst *CustomerMysqlInteractor) GetListCustomer(ctx context.Context) ([]*cus
 }
 
 // ReadUser by ID implements _interface.InterfaceCustomer
-func (cst *CustomerMysqlInteractor) GetCustomerById(ctx context.Context, id string) (*customer.Customer, error) {
+func (cst *CustomerMysqlInteractor) GetCustomerById(ctx context.Context, idcust string) (*customer.Customer, error) {
 	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
 	defer cancel()
 
@@ -125,7 +123,7 @@ func (cst *CustomerMysqlInteractor) GetCustomerById(ctx context.Context, id stri
 		DecoderConfig:  dbq.StdTimeConversionConfig(),
 	}
 
-	resultCustomer, err := dbq.Q(ctx, cst.db, queryCustomer, opts, id)
+	resultCustomer, err := dbq.Q(ctx, cst.db, queryCustomer, opts, idcust)
 
 	if err != nil {
 		return nil, err
@@ -148,7 +146,14 @@ func (cst *CustomerMysqlInteractor) UpdateCustomerById(ctx context.Context, data
 	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
 	defer cancel()
 
-	query := fmt.Sprintf("UPDATE %s SET ID_USER = ?, NAME = ?, OUTLET_CODE = ?, STATUS = ? "+
+	//re, err := regexp.Compile(`[^\w]`)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//idCust = re.ReplaceAllString(idCust, "")
+	//fmt.Println(idCust)
+
+	query := fmt.Sprintf("UPDATE %s SET UNIQ_ID = ?, NAME = ?, JOIN_DATE = ? "+
 		"WHERE UNIQ_ID = '%s'", models.GetCustomerTableName(), idCust)
 
 	_, err := dbq.E(ctx, cst.db, query, nil, mapper.CustomerEntityToDbqStruct(dataCustomer))

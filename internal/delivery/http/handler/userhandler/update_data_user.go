@@ -22,7 +22,7 @@ func (usr *UserHandler) UpdateDataUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dataUser, errGet := usr.repoUser.GetUserById(usr.ctx, vars["idcust"])
+	dataUser, errGet := usr.repoUser.GetUserById(usr.ctx, vars["id"])
 	if errGet != nil {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte(errGet.Error()))
@@ -31,7 +31,7 @@ func (usr *UserHandler) UpdateDataUser(w http.ResponseWriter, r *http.Request) {
 
 	dataUser.SetUpdateData(req)
 
-	errUpdate := usr.repoUser.UpdateUserById(usr.ctx, dataUser, vars["idcust"])
+	errUpdate := usr.repoUser.UpdateUserById(usr.ctx, dataUser, vars["id"])
 	if errUpdate != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(errUpdate.Error()))

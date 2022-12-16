@@ -9,7 +9,7 @@ import (
 func (cs *CustomerHandler) DeleteDataCustomer(w http.ResponseWriter, r *http.Request) {
 	var vars = mux.Vars(r)
 
-	dataCustomer, errGet := cs.repoCustomer.GetCustomerById(cs.ctx, vars["id"])
+	dataCustomer, errGet := cs.repoCustomer.GetCustomerById(cs.ctx, vars["idcust"])
 	if errGet != nil {
 		respErr, _ := http_response.MapResponseCustomer(nil, http.StatusInternalServerError, errGet.Error())
 		w.WriteHeader(http.StatusNotFound)
@@ -19,13 +19,13 @@ func (cs *CustomerHandler) DeleteDataCustomer(w http.ResponseWriter, r *http.Req
 
 	errDelete := cs.repoCustomer.DeleteCustomer(cs.ctx, string(dataCustomer.GetValueUniqIdCust()))
 	if errDelete != nil {
-		respErr, _ := http_response.MapResponseUser(nil, http.StatusInternalServerError, errDelete.Error())
+		respErr, _ := http_response.MapResponseCustomer(nil, http.StatusInternalServerError, errDelete.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(respErr)
 		return
 	}
 
-	resp, errMap := http_response.MapResponseUser(nil, http.StatusOK, "SUCCESS DELETE DATA")
+	resp, errMap := http_response.MapResponseCustomer(nil, http.StatusOK, "SUCCESS DELETE DATA")
 	if errMap != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(errMap.Error()))

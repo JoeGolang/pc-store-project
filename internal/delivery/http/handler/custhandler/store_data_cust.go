@@ -21,13 +21,13 @@ func (cs *CustomerHandler) StoreDataCustomer(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	fmt.Println(req)
+	store := "BGR1" //HARDCODED
 
 	customer, err := customer2.NewCustomer(customer2.DTOCustomer{
 		//UniqId:   req.UniqId,
 		Name: req.Name,
 		//JoinDate: req.JoinDate,
-	}, "BOGOR")
+	}, store)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
