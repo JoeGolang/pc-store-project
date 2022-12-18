@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/mux"
 	"net/http"
 	"pc-shop-final-project/internal/delivery/http/handler/custhandler"
+	"pc-shop-final-project/internal/delivery/http/handler/setthandler"
 	"pc-shop-final-project/internal/delivery/http/handler/userhandler"
 	"pc-shop-final-project/internal/repository/mysql"
 	mysqlCon "pc-shop-final-project/pkg/mysql_connection"
@@ -16,6 +17,7 @@ var (
 	mysqlConn  = mysqlCon.InitMysqlDB()
 	repoUser   = mysql.NewUserMysql(mysqlConn)
 	repoCust   = mysql.NewCustomerMysql(mysqlConn)
+	repoSett   = mysql.NewSettleMysql(mysqlConn)
 	repoCoupon = mysql.NewCustomerMysql(mysqlConn)
 )
 
@@ -23,6 +25,7 @@ func main() {
 	r := mux.NewRouter()
 	handlerUser := userhandler.NewUserHandler(ctx, repoUser)
 	handlerCust := custhandler.NewCustomerHandler(ctx, repoCust)
+	handlerSett := setthandler.NewSettHandler(ctx, repoSett)
 	//handlerCoupon := couponhandler.NewCouponHandler(ctx, repoCoupon)
 
 	r.HandleFunc("/", ParamHandlerWithoutInput).Methods(http.MethodGet)
@@ -37,6 +40,10 @@ func main() {
 	r.HandleFunc("/cust/{idcust}", handlerCust.GetCustomerById).Methods(http.MethodGet)
 	r.HandleFunc("/custupdate/{idcust}", handlerCust.UpdateDataCustomer).Methods(http.MethodPut)
 	r.HandleFunc("/custdelete/{idcust}", handlerCust.DeleteDataCustomer).Methods(http.MethodDelete)
+
+	r.HandleFunc("/sett", handlerSett.GetListSettlement).Methods(http.MethodGet)
+	r.HandleFunc("/sett/{idSett}", handlerSett.GetSettlementById).Methods(http.MethodGet)
+	r.HandleFunc("/settupdate/{idsett}", handlerSett.UpdateDataSettlement).Methods(http.MethodPut)
 
 	//r.HandleFunc("/coupon", handlerCoupon.GetListCoupon).Methods(http.MethodGet)
 	//r.HandleFunc("/coupon/{id}", handlerCoupon.GetCouponById).Methods(http.MethodGet)

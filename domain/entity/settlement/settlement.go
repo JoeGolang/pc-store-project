@@ -6,6 +6,7 @@ import (
 	customer2 "pc-shop-final-project/domain/entity/customer"
 	"pc-shop-final-project/domain/entity/inventory"
 	user2 "pc-shop-final-project/domain/entity/user"
+	"pc-shop-final-project/internal/delivery/http/http_request"
 	"strconv"
 	"time"
 )
@@ -131,4 +132,16 @@ func (set *SettlePurchase) GetValueIdProduct() int {
 
 func (set *SettlePurchase) GetValueQtyProduct() int {
 	return set.qty
+}
+
+func (set *Settlement) SetUpdateSettlementData(req http_request.RequestSettlement) {
+	if req.Id != 0 {
+		set.id = req.Id
+	}
+	//if req.Coupon != "" {
+	//	set.coupon = req.Coupon
+	//}
+	if req.TotalPrice != 0 {
+		set.totalPrice = req.TotalPrice
+	}
 }

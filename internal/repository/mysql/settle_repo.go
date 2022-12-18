@@ -3,12 +3,16 @@ package mysql
 import (
 	"context"
 	"database/sql"
+	"errors"
+	"fmt"
+	"github.com/rocketlaunchr/dbq/v2"
 	"pc-shop-final-project/domain/entity/coupon"
 	"pc-shop-final-project/domain/entity/customer"
 	"pc-shop-final-project/domain/entity/inventory"
 	"pc-shop-final-project/domain/entity/settlement"
 	user2 "pc-shop-final-project/domain/entity/user"
-	_interface "pc-shop-final-project/domain/repository"
+	"pc-shop-final-project/internal/delivery/http/models"
+	"pc-shop-final-project/internal/repository/mysql/mapper"
 	"time"
 )
 
@@ -16,12 +20,43 @@ type SettleMysqlInteractor struct {
 	db *sql.DB
 }
 
-func NewSettleMysql(db *sql.DB) _interface.InterfaceSettlement {
+func (set *SettleMysqlInteractor) ReadSettlementById(ctx context.Context, idSett string) (*settlement.Settlement, error) {
+	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
+	defer cancel()
+
+	querySettlement := fmt.Sprintf("SELECT * FROM %s WHERE CODE_TRANSACTION = ?", models.GetSettlementTableName())
+
+	opts := &dbq.Options{
+		SingleResult:   true,
+		ConcreteStruct: models.ModelSettlement{},
+		DecoderConfig:  dbq.StdTimeConversionConfig(),
+	}
+
+	resultSettlement, err := dbq.Q(ctx, set.db, querySettlement, opts, idSett)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if resultSettlement == nil {
+		return nil, errors.New("SETTLEMENT TIDAK DITEMUKAN")
+	}
+
+	settlement, errMap := mapper.SettlementModelToEntity(resultSettlement.(*models.ModelSettlement))
+
+	if errMap != nil {
+		return nil, errMap
+	}
+
+	return settlement, nil
+}
+
+func NewSettleMysql(db *sql.DB) *SettleMysqlInteractor {
 	return &SettleMysqlInteractor{db: db}
 }
 
 // CreateSettle implements _interface.InterfaceSettlement
-func (set *SettleMysqlInteractor) CreateSettle(ctx context.Context, idUser int, idCustomer int, idCoupon int, settle *settlement.Settlement) error {
+func (set *SettleMysqlInteractor) CreateSettle(ctx context.Context, settle *settlement.Settlement) error {
 	var (
 		errMysql error
 	)
@@ -38,7 +73,7 @@ func (set *SettleMysqlInteractor) CreateSettle(ctx context.Context, idUser int, 
 
 	insertQuery := "INSERT INTO settlement(USER, CUSTOMER, COUPON_ID, CODE_TRANSACTION, TOTAL_PRICE, STATUS_TRANSACTION) VALUES (?,?,?,?,?,?)"
 
-	_, errMysql = set.db.Exec(insertQuery, idUser, idCustomer, idCoupon, settle.GetValueCodeSett(), settle.GetValueTotalPriceSett(), settle.GetValueStatusTrns())
+	_, errMysql = set.db.Exec(insertQuery, settle.GetValueCodeSett(), settle.GetValueTotalPriceSett(), settle.GetValueStatusTrns())
 
 	if errMysql != nil {
 		return errMysql

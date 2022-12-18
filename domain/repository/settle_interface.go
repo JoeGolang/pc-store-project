@@ -6,8 +6,10 @@ import (
 )
 
 type InterfaceSettlement interface {
-	CreateSettle(ctx context.Context, idUser int, idCustomer int, idCoupon int, settle *settlement.Settlement) error
+	//, idUser int, idCustomer int, idCoupon int
+	CreateSettle(ctx context.Context, settle *settlement.Settlement) error
 	ReadSettle(ctx context.Context) ([]*settlement.Settlement, error)
+	ReadSettlementById(ctx context.Context, idSett string) (*settlement.Settlement, error)
 	UpdateSettle(ctx context.Context, code string) error
 	DeleteSettle(ctx context.Context, code string) error
 }
