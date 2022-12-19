@@ -56,6 +56,55 @@ func ParamNewCustomer(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func ParamNewUser(w http.ResponseWriter, r *http.Request) {
+	var (
+		req        http_request.RequestUser
+		decoder    = json.NewDecoder(r.Body)
+		userEntity *entity.User
+		err        error
+	)
+
+	errDecode := decoder.Decode(&req)
+	if errDecode != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Error decode data"))
+		return
+	}
+
+	userData := handler_redis.GetUserRedis(ctx)
+	if userData.GetValueIdUsr() == 0 {
+		fmt.Fprintf(w, "LOGIN TO PROCEED...")
+		fmt.Println("LOGIN TO PROCEED...")
+		w.WriteHeader(http.StatusBadRequest)
+	}
+	if userData.GetValueIdUsr() != 0 {
+		if userData.GetValueStatusUsr() == "Owner" {
+			fmt.Println("Login as ", userData.GetValueStatusUsr())
+			fmt.Println("ID : ", req.Id)
+			fmt.Println("Name : ", req.Name)
+			fmt.Println("Outlet : ", req.Outlet)
+			fmt.Println("Status : ", req.Status)
+
+			userEntity, err = usecase.NewUser(userData.GetValueIdUsr(), req.Id, req.Name, req.Outlet, req.Status)
+			if err != nil {
+				fmt.Println(err)
+			}
+			//response data new customer
+			handler_redis.SetUserRedis(ctx, userEntity)
+			w.WriteHeader(http.StatusOK)
+			fmt.Fprintf(w, "New User as %s Created...", userEntity.GetValueStatusUsr())
+			fmt.Fprintf(w, "\n ID : %d", userEntity.GetValueIdUsr())
+			fmt.Fprintf(w, "\n NAME : %s", userEntity.GetValueNameUsr())
+		}
+		if userData.GetValueStatusUsr() == "Employee" {
+			w.WriteHeader(http.StatusUnauthorized)
+			fmt.Fprintf(w, "Only Employee can set new Customer")
+			fmt.Println("Login as ", userData.GetValueStatusUsr())
+			fmt.Println("cannot access settlement")
+		}
+	}
+}
+
 func NewSession(w http.ResponseWriter, r *http.Request) {
 	user := handler_redis.GetUserRedis(ctx)
 	if user.GetValueIdUsr() != 0 {

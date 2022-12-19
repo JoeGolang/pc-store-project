@@ -38,6 +38,37 @@ func NewCustomer(userID int, nameCustomer string) (*entity.Customer, error) {
 	return NewCust, nil
 }
 
+func NewUser(userID int, id int, name string, outlet string, status string) (*entity.User, error) {
+	var currentUser = &entity.User{}
+
+	DTONewUser := &entity.DTOUser{
+		Id:         id,
+		Name:       name,
+		OutletCode: outlet,
+		Status:     status,
+	}
+
+	users := handler.ReadUser(ctx)
+	for _, user := range users {
+		if userID == user.GetValueIdUsr() {
+			currentUser = user
+		}
+	}
+
+	if currentUser == nil {
+		return nil, errors.New("cannot find user")
+	}
+
+	NewUser, err := entity.NewUser(DTONewUser)
+	if err != nil {
+		return nil, err
+	}
+
+	handler.CreateUser(ctx, NewUser)
+
+	return NewUser, nil
+}
+
 func TransactionAddItem(UCs []string, itemID int, itemList []*entity.SettlePurchase) ([]*entity.SettlePurchase, int) {
 	var (
 		price int

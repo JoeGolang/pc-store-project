@@ -30,6 +30,7 @@ func main() {
 
 	r.HandleFunc("/", handlerHTTP.ParamHandlerWithoutInput).Methods(http.MethodGet)
 	r.HandleFunc("/user", handlerHTTP.GetUsers).Methods(http.MethodGet)
+	r.HandleFunc("/NewUser", handlerHTTP.ParamNewUser).Methods(http.MethodPost)
 	r.HandleFunc("/customer", handlerHTTP.GetCustomers).Methods(http.MethodGet)
 	r.HandleFunc("/IdUser:{ID}", handlerHTTP.ParamLoginIdUser).Methods(http.MethodGet)
 	r.HandleFunc("/IdCustomer:{ID}", handlerHTTP.ParamIdCustomer).Methods(http.MethodGet)
