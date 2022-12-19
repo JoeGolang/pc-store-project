@@ -3,7 +3,8 @@ package mysql
 import (
 	"context"
 	"database/sql"
-	"pc-shop-final-project/domain/entity/inventory"
+	"pc-shop-final-project/domain/entity"
+	_interface "pc-shop-final-project/domain/repository"
 	"time"
 )
 
@@ -11,14 +12,12 @@ type InventoryMysqlInteractor struct {
 	db *sql.DB
 }
 
-func NewInventoryMysql(db *sql.DB) *InventoryMysqlInteractor {
-	return &InventoryMysqlInteractor{
-		db: db,
-	}
+func NewInventoryMysql(db *sql.DB) _interface.InterfaceInventory {
+	return &InventoryMysqlInteractor{db: db}
 }
 
 // CreateInventory implements _interface.InterfaceInventory
-func (inven *InventoryMysqlInteractor) CreateInventory(ctx context.Context, inv *inventory.Inventory) error {
+func (inven *InventoryMysqlInteractor) CreateInventory(ctx context.Context, inv *entity.Inventory) error {
 	var (
 		errMysql error
 	)
@@ -65,7 +64,7 @@ func (inven *InventoryMysqlInteractor) DeleteInventory(ctx context.Context, id i
 }
 
 // ReadInventory implements _interface.InterfaceInventory
-func (inven *InventoryMysqlInteractor) ReadInventory(ctx context.Context) ([]*inventory.Inventory, error) {
+func (inven *InventoryMysqlInteractor) ReadInventory(ctx context.Context) ([]*entity.Inventory, error) {
 	var (
 		errMysql error
 	)
@@ -79,7 +78,7 @@ func (inven *InventoryMysqlInteractor) ReadInventory(ctx context.Context) ([]*in
 		return nil, errMysql
 	}
 
-	listInventory := make([]*inventory.Inventory, 0)
+	listInventory := make([]*entity.Inventory, 0)
 	for rows.Next() {
 		var (
 			ID_PRODUCT   int
@@ -94,7 +93,7 @@ func (inven *InventoryMysqlInteractor) ReadInventory(ctx context.Context) ([]*in
 			return nil, errScan
 		}
 
-		inventory, errFetch := inventory.NewInventory(inventory.DTOInventory{
+		inventory, errFetch := entity.NewInventory(&entity.DTOInventory{
 			Id:          ID_PRODUCT,
 			ProductName: PRODUCT_NAME,
 			Brand:       BRAND,

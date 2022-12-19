@@ -1,13 +1,14 @@
-package repository
+package _interface
 
 import (
 	"context"
-	"pc-shop-final-project/domain/entity/coupon"
+	"pc-shop-final-project/domain/entity"
 )
 
 type InterfaceCoupon interface {
-	CreateCoupon(ctx context.Context, coupon *coupon.Coupon, uniqcoupon []*coupon.UniqCoupon) error
-	GetListCoupon(ctx context.Context) ([]*coupon.Coupon, []*coupon.UniqCoupon, error)
+	CreateCoupon(ctx context.Context, coupon *entity.Coupon, uniqcoupon []*entity.UniqCoupon) error
+	ReadCoupon(ctx context.Context) ([]*entity.Coupon, []*entity.UniqCoupon, error)
 	UpdateCoupon(ctx context.Context, uniqId string) error
 	DeleteCoupon(ctx context.Context, id int) error
+	GetIdCoupon(ctx context.Context) (int, error)
 }

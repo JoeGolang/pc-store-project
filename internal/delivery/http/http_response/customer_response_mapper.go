@@ -2,7 +2,7 @@ package http_response
 
 import (
 	"encoding/json"
-	"pc-shop-final-project/domain/entity/customer"
+	"pc-shop-final-project/domain/entity"
 )
 
 type ResponseCustomerJson struct {
@@ -21,7 +21,7 @@ type CustomCustReponseSingle struct {
 	Data   *ResponseCustomerJson
 }
 
-func MapResponseListCustomer(dataCustomer []*customer.Customer, code int, message string) ([]byte, error) {
+func MapResponseListCustomer(dataCustomer []*entity.Customer, code int, message string) ([]byte, error) {
 	listRespCustomer := make([]*ResponseCustomerJson, 0)
 	for _, dataCust := range dataCustomer {
 		respCustomer := &ResponseCustomerJson{
@@ -48,7 +48,7 @@ func MapResponseListCustomer(dataCustomer []*customer.Customer, code int, messag
 	return respJson, nil
 }
 
-func MapResponseCustomer(dataCustomer *customer.Customer, code int, message string) ([]byte, error) {
+func MapResponseCustomer(dataCustomer *entity.Customer, code int, message string) ([]byte, error) {
 	var resp *ResponseCustomerJson
 	if dataCustomer != nil {
 		resp = &ResponseCustomerJson{
@@ -56,7 +56,6 @@ func MapResponseCustomer(dataCustomer *customer.Customer, code int, message stri
 			NAME:      dataCustomer.GetValueNameCust(),
 			JOIN_DATE: dataCustomer.GetValueJoinDateCust(),
 		}
-
 	}
 
 	httpResponse := &CustomCustReponseSingle{

@@ -2,13 +2,15 @@ package http_response
 
 import (
 	"encoding/json"
-	"pc-shop-final-project/domain/entity/settlement"
+	"pc-shop-final-project/domain/entity"
 )
 
 type ResponseSettlementJson struct {
-	//CUSTOMER         int `json:"CUSTOMER"`
-	CODE_TRANSACTION string `json:"CODE_TRANSACTION"`
-	TOTAL_PRICE      int    `json:"TOTAL_PRICE"`
+	ID                 int    `json:"ID"`
+	COUPON_ID          string `json:"COUPON_ID"`
+	CODE_TRANSACTION   string `json:"CODE_TRANSACTION"`
+	TOTAL_PRICE        int    `json:"TOTAL_PRICE"`
+	STATUS_TRANSACTION bool   `json:"STATUS_TRANSACTION"`
 }
 
 type CustomSettReponseCollection struct {
@@ -21,15 +23,15 @@ type CustomSettReponseSingle struct {
 	Data   *ResponseSettlementJson
 }
 
-func MapResponseListSettlement(dataSettlement []*settlement.Settlement, code int, message string) ([]byte, error) {
+func MapResponseListSettlement(dataSettlement []*entity.Settlement, code int, message string) ([]byte, error) {
 	listRespSettlement := make([]*ResponseSettlementJson, 0)
 	for _, dataSett := range dataSettlement {
-		respSettlement := &ResponseSettlementJson{
-			//CUSTOMER:   dataSett.GetValueCustomerSett(),
+		respSett := &ResponseSettlementJson{
+			ID:               dataSett.GetValueIdSett(),
 			CODE_TRANSACTION: dataSett.GetValueCodeSett(),
 			TOTAL_PRICE:      dataSett.GetValueTotalPriceSett(),
 		}
-		listRespSettlement = append(listRespSettlement, respSettlement)
+		listRespSettlement = append(listRespSettlement, respSett)
 	}
 
 	httpResponse := &CustomSettReponseCollection{
@@ -48,15 +50,14 @@ func MapResponseListSettlement(dataSettlement []*settlement.Settlement, code int
 	return respJson, nil
 }
 
-func MapResponseSettlement(dataSettlement *settlement.Settlement, code int, message string) ([]byte, error) {
+func MapResponseSettlement(dataSettlement *entity.Settlement, code int, message string) ([]byte, error) {
 	var resp *ResponseSettlementJson
 	if dataSettlement != nil {
 		resp = &ResponseSettlementJson{
-			//CUSTOMER:   dataSettlement.GetValueCustomerSett(),
+			ID:               dataSettlement.GetValueIdSett(),
 			CODE_TRANSACTION: dataSettlement.GetValueCodeSett(),
 			TOTAL_PRICE:      dataSettlement.GetValueTotalPriceSett(),
 		}
-
 	}
 
 	httpResponse := &CustomSettReponseSingle{

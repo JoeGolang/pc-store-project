@@ -1,14 +1,12 @@
-package repository
+package _interface
 
 import (
 	"context"
-	"pc-shop-final-project/domain/entity/customer"
+	"pc-shop-final-project/domain/entity"
 )
 
 type InterfaceCustomer interface {
-	InsertDataCustomer(ctx context.Context, cust *customer.Customer) error
-	GetListCustomer(ctx context.Context) ([]*customer.Customer, error)
+	CreateCustomer(ctx context.Context, cust *entity.Customer) error
+	ReadCustomer(ctx context.Context) ([]*entity.Customer, error)
 	DeleteCustomer(ctx context.Context, uniqId string) error
-	GetCustomerById(ctx context.Context, idCust string) (*customer.Customer, error)
-	UpdateCustomerById(ctx context.Context, dataCustomer *customer.Customer, idCust string) error
 }

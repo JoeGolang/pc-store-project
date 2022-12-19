@@ -3,7 +3,7 @@ package mysql
 import (
 	"context"
 	"database/sql"
-	"pc-shop-final-project/domain/entity/settlement"
+	"pc-shop-final-project/domain/entity"
 	_interface "pc-shop-final-project/domain/repository"
 	"time"
 )
@@ -17,7 +17,7 @@ func NewSettlePurchaseMysql(db *sql.DB) _interface.InterfaceSettlementItem {
 }
 
 // CreatePurchase implements _interface.InterfaceSettlementItem
-func (set *SettleItemMysqlInteractor) CreatePurchase(ctx context.Context, purchase []*settlement.SettlePurchase) error {
+func (set *SettleItemMysqlInteractor) CreatePurchase(ctx context.Context, purchase []*entity.SettlePurchase) error {
 	var (
 		errMysql error
 	)
@@ -33,9 +33,9 @@ func (set *SettleItemMysqlInteractor) CreatePurchase(ctx context.Context, purcha
 	}
 
 	for _, purc := range purchase {
-		insertQuery := "INSERT INTO settlement_purchased(ID_SETTLEMENT, ID_ITEM, QTY) VALUES (?,?,?)"
+		insertQuery := "INSERT INTO settlement_purchased(CODE_TRANSACTION, ID_ITEM, QTY) VALUES (?,?,?)"
 
-		_, errMysql = set.db.Exec(insertQuery, purc.GetValueIdProduct(), purc.GetValueIdSettlement())
+		_, errMysql = set.db.Exec(insertQuery, purc.GetValueCodeSettlement(), purc.GetValueIdProduct(), purc.GetValueQtyProduct())
 
 		if errMysql != nil {
 			return errMysql
@@ -45,7 +45,7 @@ func (set *SettleItemMysqlInteractor) CreatePurchase(ctx context.Context, purcha
 }
 
 // DeletePurchase implements _interface.InterfaceSettlementItem
-func (set *SettleItemMysqlInteractor) DeletePurchase(ctx context.Context, codeItem string) error {
+func (set *SettleItemMysqlInteractor) DeletePurchase(ctx context.Context, codeTrans string) error {
 	var (
 		errMysql error
 	)
@@ -55,7 +55,7 @@ func (set *SettleItemMysqlInteractor) DeletePurchase(ctx context.Context, codeIt
 
 	deleteQuery := "DELETE FROM settlement_purchased WHERE CODE_TRANSACTION = ?"
 
-	_, errMysql = set.db.Exec(deleteQuery, codeItem)
+	_, errMysql = set.db.Exec(deleteQuery, codeTrans)
 
 	if errMysql != nil {
 		return errMysql
@@ -65,7 +65,7 @@ func (set *SettleItemMysqlInteractor) DeletePurchase(ctx context.Context, codeIt
 }
 
 // ReadPurchase implements _interface.InterfaceSettlementItem
-func (set *SettleItemMysqlInteractor) ReadPurchase(ctx context.Context) ([]*settlement.SettlePurchase, error) {
+func (set *SettleItemMysqlInteractor) ReadPurchase(ctx context.Context) ([]*entity.SettlePurchase, error) {
 	var (
 		errMysql error
 	)
@@ -73,26 +73,26 @@ func (set *SettleItemMysqlInteractor) ReadPurchase(ctx context.Context) ([]*sett
 	ctx, cancel := context.WithTimeout(ctx, 60*time.Second)
 	defer cancel()
 
-	sqlQuery := "SELECT ID_SETTLEMENT, ID_ITEM, QTY FROM settlement_purchased"
+	sqlQuery := "SELECT CODE_TRANSACTION, ID_ITEM, QTY FROM settlement_purchased"
 	rows, errMysql := set.db.QueryContext(ctx, sqlQuery)
 	if errMysql != nil {
 		return nil, errMysql
 	}
 
-	listSettleP := make([]*settlement.SettlePurchase, 0)
+	listSettleP := make([]*entity.SettlePurchase, 0)
 	for rows.Next() {
 		var (
-			ID_SETTLEMENT int
-			ID_ITEM       int
-			QTY           int
+			CODE_TRANSACTION string
+			ID_ITEM          int
+			QTY              int
 		)
 
-		errScan := rows.Scan(&ID_SETTLEMENT, &ID_ITEM, &QTY)
+		errScan := rows.Scan(&CODE_TRANSACTION, &ID_ITEM, &QTY)
 		if errScan != nil {
 			return nil, errScan
 		}
 
-		setP := settlement.NewSettlePurchase(ID_SETTLEMENT, ID_ITEM, QTY)
+		setP := entity.FetchSettlePurchase(CODE_TRANSACTION, ID_ITEM, QTY)
 
 		listSettleP = append(listSettleP, setP)
 	}

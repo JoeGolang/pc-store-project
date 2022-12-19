@@ -2,7 +2,7 @@ package http_response
 
 import (
 	"encoding/json"
-	"pc-shop-final-project/domain/entity/user"
+	"pc-shop-final-project/domain/entity"
 )
 
 type Status struct {
@@ -17,17 +17,17 @@ type ResponseUserJson struct {
 	Status string `json:"STATUS"`
 }
 
-type CustomReponseCollection struct {
+type ReponseUsers struct {
 	Status *Status
 	Data   []*ResponseUserJson
 }
 
-type CustomReponseSingle struct {
+type ReponseUser struct {
 	Status *Status
 	Data   *ResponseUserJson
 }
 
-func MapResponseListUser(dataUsers []*user.User, code int, message string) ([]byte, error) {
+func MapResponseListUser(dataUsers []*entity.User, code int, message string) ([]byte, error) {
 	listRespUser := make([]*ResponseUserJson, 0)
 	for _, dataUser := range dataUsers {
 		respUser := &ResponseUserJson{
@@ -39,7 +39,7 @@ func MapResponseListUser(dataUsers []*user.User, code int, message string) ([]by
 		listRespUser = append(listRespUser, respUser)
 	}
 
-	httpResponse := &CustomReponseCollection{
+	httpResponse := &ReponseUsers{
 		Status: &Status{
 			Code:    code,
 			Message: message,
@@ -55,7 +55,7 @@ func MapResponseListUser(dataUsers []*user.User, code int, message string) ([]by
 	return respJson, nil
 }
 
-func MapResponseUser(dataUser *user.User, code int, message string) ([]byte, error) {
+func MapResponseUser(dataUser *entity.User, code int, message string) ([]byte, error) {
 	var resp *ResponseUserJson
 	if dataUser != nil {
 		resp = &ResponseUserJson{
@@ -64,10 +64,9 @@ func MapResponseUser(dataUser *user.User, code int, message string) ([]byte, err
 			Outlet: dataUser.GetValueOutletCodeUsr(),
 			Status: dataUser.GetValueStatusUsr(),
 		}
-
 	}
 
-	httpResponse := &CustomReponseSingle{
+	httpResponse := &ReponseUser{
 		Status: &Status{
 			Code:    code,
 			Message: message,

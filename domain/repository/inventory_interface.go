@@ -1,13 +1,12 @@
-package repository
+package _interface
 
 import (
 	"context"
-	"pc-shop-final-project/domain/entity/inventory"
+	"pc-shop-final-project/domain/entity"
 )
 
 type InterfaceInventory interface {
-	GetListInventory(ctx context.Context) ([]*inventory.Inventory, error)
-	//CreateInventory(ctx context.Context) ([]*inventory.Inventory, error)
-	//ReadInventory(ctx context.Context) ([]*inventory.Inventory, error)
-	//DeleteInventory(ctx context.Context, id int) error
+	CreateInventory(ctx context.Context, inv *entity.Inventory) error
+	ReadInventory(ctx context.Context) ([]*entity.Inventory, error)
+	DeleteInventory(ctx context.Context, id int) error
 }

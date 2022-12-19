@@ -3,7 +3,8 @@ package mysql
 import (
 	"context"
 	"database/sql"
-	"pc-shop-final-project/domain/entity/coupon"
+	"pc-shop-final-project/domain/entity"
+	_interface "pc-shop-final-project/domain/repository"
 	"time"
 )
 
@@ -11,12 +12,12 @@ type CouponMysqlInteractor struct {
 	db *sql.DB
 }
 
-func NewCouponMysql(db *sql.DB) *CouponMysqlInteractor {
+func NewCouponMysql(db *sql.DB) _interface.InterfaceCoupon {
 	return &CouponMysqlInteractor{db: db}
 }
 
 // CreateCoupon implements _interface.InterfaceCoupon
-func (cpn *CouponMysqlInteractor) CreateCoupon(ctx context.Context, coupon *coupon.Coupon, uniqcoupon []*coupon.UniqCoupon) error {
+func (cpn *CouponMysqlInteractor) CreateCoupon(ctx context.Context, coupon *entity.Coupon, uniqcoupon []*entity.UniqCoupon) error {
 	var (
 		errMysql error
 	)
@@ -31,15 +32,22 @@ func (cpn *CouponMysqlInteractor) CreateCoupon(ctx context.Context, coupon *coup
 		return errMysql
 	}
 
-	insertQueryCoupon := "INSERT INTO coupon(ID_COUPON, ID_CUSTOMER, GENERATE_DATE, REVENUE, ACTIVE_DATE_STATUS) VALUES (?,?,?,?,?)"
+	insertQueryCoupon := "INSERT INTO coupon(ID_COUPON, ID_CUSTOMER, GENERATE_DATE, REVENUE) VALUES (?,?,?,?)"
 
-	_, errMysql = cpn.db.Exec(insertQueryCoupon, coupon.GetValueIdCpn(), coupon.GetValueIdCustomerCpn(), coupon.GetValueGenDateCpn(), coupon.GetValueRevenueCpn(), coupon.GetValueActiveCpn())
+	_, errMysql = cpn.db.Exec(insertQueryCoupon, coupon.GetValueIdCpn(), coupon.GetValueIdCustomerCpn(), coupon.GetValueGenDateCpn(), coupon.GetValueRevenueCpn())
 
 	if errMysql != nil {
 		return errMysql
 	}
 
-	for _, uniqCpn := range coupon.GetValueUniqIdCpn() {
+	for _, uniqCpn := range coupon.GetValueUniqCpn() {
+		setAutoInc := "ALTER TABLE code_coupon AUTO_INCREMENT=1"
+		_, errMysql = cpn.db.Exec(setAutoInc)
+
+		if errMysql != nil {
+			return errMysql
+		}
+
 		insertQueryUC := "INSERT INTO code_coupon(ID_COUPON, UNIQUE_ID, ACTIVE_USE_STATUS) VALUES (?,?,?)"
 
 		_, errMysql = cpn.db.Exec(insertQueryUC, uniqCpn.GetValueIdCoupon(), uniqCpn.GetValueUniqIdCoupon(), uniqCpn.GetValueStatusCoupon())
@@ -82,7 +90,7 @@ func (cpn *CouponMysqlInteractor) DeleteCoupon(ctx context.Context, id int) erro
 }
 
 // ReadCoupon implements _interface.InterfaceCoupon
-func (cpn *CouponMysqlInteractor) ReadCoupon(ctx context.Context) ([]*coupon.Coupon, []*coupon.UniqCoupon, error) {
+func (cpn *CouponMysqlInteractor) ReadCoupon(ctx context.Context) ([]*entity.Coupon, []*entity.UniqCoupon, error) {
 	var (
 		errMysql error
 	)
@@ -96,7 +104,7 @@ func (cpn *CouponMysqlInteractor) ReadCoupon(ctx context.Context) ([]*coupon.Cou
 		return nil, nil, errMysql
 	}
 
-	listUniqCoupon := make([]*coupon.UniqCoupon, 0)
+	listUniqCoupon := make([]*entity.UniqCoupon, 0)
 	for rows.Next() {
 		var (
 			ID_COUPON         int
@@ -109,7 +117,7 @@ func (cpn *CouponMysqlInteractor) ReadCoupon(ctx context.Context) ([]*coupon.Cou
 			return nil, nil, errScan
 		}
 
-		uniqCoupon := coupon.FetchUniqCoupon(&coupon.DTOUniqCoupon{
+		uniqCoupon := entity.FetchUniqCoupon(&entity.DTOUniqCoupon{
 			Id:     ID_COUPON,
 			UniqId: UNIQ_ID,
 			Status: ACTIVE_USE_STATUS,
@@ -118,42 +126,40 @@ func (cpn *CouponMysqlInteractor) ReadCoupon(ctx context.Context) ([]*coupon.Cou
 		listUniqCoupon = append(listUniqCoupon, uniqCoupon)
 	}
 
-	sqlQuery := "SELECT ID_COUPON, ID_CUSTOMER, GENERATE_DATE, REVENUE, ACTIVE_DATE_STATUS FROM coupon"
+	sqlQuery := "SELECT ID_COUPON, ID_CUSTOMER, GENERATE_DATE, REVENUE FROM coupon"
 	rows, errMysql = cpn.db.QueryContext(ctx, sqlQuery)
 	if errMysql != nil {
 		return nil, nil, errMysql
 	}
 
-	listCoupon := make([]*coupon.Coupon, 0)
+	listCoupon := make([]*entity.Coupon, 0)
 	for rows.Next() {
 		var (
-			ID_COUPON          int
-			ID_CUSTOMER        string
-			GENERATE_DATE      string
-			REVENUE            int
-			ACTIVE_DATE_STATUS bool
+			ID_COUPON     int
+			ID_CUSTOMER   string
+			GENERATE_DATE string
+			REVENUE       int
 		)
 
-		errScan := rows.Scan(&ID_COUPON, &ID_CUSTOMER, &GENERATE_DATE, &REVENUE, &ACTIVE_DATE_STATUS)
+		errScan := rows.Scan(&ID_COUPON, &ID_CUSTOMER, &GENERATE_DATE, &REVENUE)
 		if errScan != nil {
 			return nil, nil, errScan
 		}
 
-		listMatchUniqCoupon := make([]coupon.UniqCoupon, 0)
+		listMatchUniqCoupon := make([]*entity.UniqCoupon, 0)
 
 		for _, matchCoupon := range listUniqCoupon {
 			if matchCoupon.GetValueIdCoupon() == ID_COUPON {
-				listMatchUniqCoupon = append(listMatchUniqCoupon, *matchCoupon)
+				listMatchUniqCoupon = append(listMatchUniqCoupon, matchCoupon)
 			}
 		}
 
-		coupon := coupon.FetchCoupon(&coupon.DTOCoupon{
+		coupon := entity.FetchCoupon(&entity.DTOCoupon{
 			Id:         ID_COUPON,
 			IdCustomer: ID_CUSTOMER,
 			UniqCoupon: listMatchUniqCoupon,
 			GenDate:    GENERATE_DATE,
 			Revenue:    REVENUE,
-			Active:     ACTIVE_DATE_STATUS,
 		})
 
 		listCoupon = append(listCoupon, coupon)
@@ -180,4 +186,26 @@ func (cpn *CouponMysqlInteractor) UpdateCoupon(ctx context.Context, uniqId strin
 		return errMysql
 	}
 	return nil
+}
+
+// GetIdCoupon implements _interface.InterfaceCoupon
+func (cpn *CouponMysqlInteractor) GetIdCoupon(ctx context.Context) (int, error) {
+	var id int
+
+	ctx, cancel := context.WithTimeout(ctx, 60*time.Second)
+	defer cancel()
+
+	getQuery := "SELECT MAX(ID)FROM coupon"
+	rows, errMysql := cpn.db.QueryContext(ctx, getQuery)
+	if errMysql != nil {
+		return 0, errMysql
+	}
+	for rows.Next() {
+		errScan := rows.Scan(&id)
+		if errScan != nil {
+			return 0, errScan
+		}
+	}
+
+	return id, nil
 }
