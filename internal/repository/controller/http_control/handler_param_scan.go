@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"pc-shop-final-project/domain/entity"
+	"pc-shop-final-project/internal/delivery/http/http_response"
 	handler "pc-shop-final-project/internal/repository/controller"
 	handler_redis "pc-shop-final-project/internal/repository/controller/redis_control"
 	usecase "pc-shop-final-project/internal/repository/process"
@@ -17,6 +18,7 @@ func ParamAddItemPurchase(w http.ResponseWriter, r *http.Request) {
 		item          int
 		priceTotal    int
 		price         int
+		productDetail string
 		user          *entity.User
 		cust          *entity.Customer
 		purchasedItem []*entity.SettlePurchase
@@ -48,7 +50,8 @@ func ParamAddItemPurchase(w http.ResponseWriter, r *http.Request) {
 				fmt.Println("Item ID : ", item)
 
 				user, cust, purchasedItem = handler_redis.GetAllRedis(ctx)
-				purchasedItem, price = usecase.TransactionNewItem(item, purchasedItem)
+				purchasedItem, price, productDetail = usecase.TransactionNewItems(productDetail, item, purchasedItem)
+
 				handler_redis.SetSetItRedis(ctx, purchasedItem)
 				items := handler.ReadInventory(ctx)
 				for _, p := range purchasedItem {
@@ -56,7 +59,6 @@ func ParamAddItemPurchase(w http.ResponseWriter, r *http.Request) {
 						if p.GetValueIdProduct() == i.GetValueIdInv() {
 							priceTotal += i.GetvaluePriceInv()
 							fmt.Fprintln(w, i.GetValueProductNameInv(), "(", i.GetValueCategoryInv(), ")", i.GetvaluePriceInv())
-
 						}
 					}
 				}
@@ -70,14 +72,22 @@ func ParamAddItemPurchase(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprintln(w, "______________________________")
 				fmt.Fprintln(w, "Transaction : ", user.GetValueNameUsr(), " - ", cust.GetValueNameCust())
 
-				//response show data item purchased, show data item new added, price, total
+				response, errMap := http_response.MapResponseListItem(purchasedItem, productDetail, price, priceTotal, 200, "Success")
+				if errMap != nil {
+					w.WriteHeader(http.StatusInternalServerError)
+					w.Write([]byte("Error mapping data"))
+				}
+
+				w.WriteHeader(200)
+				w.Write(response)
+
 				w.WriteHeader(http.StatusProcessing)
 			}
 		}
 		if userData.GetValueStatusUsr() == "Owner" {
 			if custData.GetValueUniqIdCust() != "" {
 				w.WriteHeader(http.StatusUnauthorized)
-				fmt.Fprintf(w, "no access...")
+				fmt.Fprintf(w, "As owner can not generate settlement...")
 			}
 		}
 	}

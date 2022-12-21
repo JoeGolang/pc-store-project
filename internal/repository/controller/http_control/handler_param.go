@@ -43,7 +43,16 @@ func ParamLoginIdUser(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "LOGIN SUCCESS...")
 			fmt.Fprintln(w, "Welcome ", dataUser.GetValueNameUsr(), ",\n you logged in as ", dataUser.GetValueStatusUsr())
 			w.WriteHeader(http.StatusFound)
-			//response show data login
+
+			response, errMap := http_response.MapResponseUser(user, 200, "Success")
+			if errMap != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("Error mapping data"))
+			}
+
+			w.WriteHeader(200)
+			w.Write(response)
+
 		}
 	}
 	if user == nil {
@@ -76,7 +85,16 @@ func ParamIdCustomer(w http.ResponseWriter, r *http.Request) {
 					handler_redis.SetCustomerRedis(ctx, dataCust)
 					w.WriteHeader(http.StatusFound)
 					fmt.Fprintf(w, "Customer Data FOUND...\n\n Name : %s \n ID : %s \n Join Date : %s \n", dataCust.GetValueNameCust(), dataCust.GetValueUniqIdCust(), dataCust.GetValueJoinDateCust())
-					//response customer data ok
+
+					response, errMap := http_response.MapResponseCustomer(cust, 200, "Success")
+					if errMap != nil {
+						w.WriteHeader(http.StatusInternalServerError)
+						w.Write([]byte("Error mapping data"))
+					}
+
+					w.WriteHeader(200)
+					w.Write(response)
+
 				}
 			}
 			if cust.GetValueUniqIdCust() == "" {

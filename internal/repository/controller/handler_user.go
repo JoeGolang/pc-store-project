@@ -39,9 +39,11 @@ func ReadUser(ctx context.Context) []*entity.User {
 	return Users
 }
 
-func DeleteUser(ctx context.Context, code int) {
+func DeleteUser(ctx context.Context, code int) error {
 	err := HandlerUser.repository.DeleteUser(ctx, code)
 	if err != nil {
 		fmt.Println(err)
+		return err
 	}
+	return nil
 }

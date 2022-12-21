@@ -39,9 +39,11 @@ func ReadCustomer(ctx context.Context) []*entity.Customer {
 	return customers
 }
 
-func DeleteCustomer(ctx context.Context, uniqId string) {
+func DeleteCustomer(ctx context.Context, uniqId string) error {
 	err := HandlerCustomer.repository.DeleteCustomer(ctx, uniqId)
 	if err != nil {
 		fmt.Println(err)
+		return err
 	}
+	return nil
 }

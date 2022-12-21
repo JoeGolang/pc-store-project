@@ -137,6 +137,23 @@ func TransactionNewItem(itemID int, itemList []*entity.SettlePurchase) ([]*entit
 	return itemList, price
 }
 
+func TransactionNewItems(productDetail string, itemID int, itemList []*entity.SettlePurchase) ([]*entity.SettlePurchase, int, string) {
+	var price int
+	Inventories := handler.ReadInventory(ctx)
+
+	for _, Item := range Inventories {
+		if Item.GetValueIdInv() == itemID {
+			fmt.Println("Item ", Item.GetValueProductNameInv(), "-", Item.GetValueCategoryInv(), " Added...")
+
+			ItemAdd := entity.NewSettlePurchase(itemID, 1)
+			itemList = append(itemList, ItemAdd)
+			price = Item.GetvaluePriceInv()
+			productDetail = Item.GetValueProductNameInv()
+		}
+	}
+	return itemList, price, productDetail
+}
+
 func GetInvDetail(invID int) (invDetail string, invCat string) {
 	Inventories := handler.ReadInventory(ctx)
 

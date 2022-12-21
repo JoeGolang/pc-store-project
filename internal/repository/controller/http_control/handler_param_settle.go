@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"pc-shop-final-project/domain/entity"
+	"pc-shop-final-project/internal/delivery/http/http_response"
 	handler "pc-shop-final-project/internal/repository/controller"
 	handler_redis "pc-shop-final-project/internal/repository/controller/redis_control"
 	usecase "pc-shop-final-project/internal/repository/process"
@@ -104,6 +105,16 @@ func ParamSettleProcess(w http.ResponseWriter, r *http.Request) {
 				handler.CreateCoupon(ctx, cpn, cpn.GetValueUniqCpn())
 				w.WriteHeader(http.StatusOK)
 				fmt.Fprintf(w, "Transaction Success..")
+
+				response, errMap := http_response.MapResponseSettlement(settle, 200, "Success")
+				if errMap != nil {
+					w.WriteHeader(http.StatusInternalServerError)
+					w.Write([]byte("Error mapping data"))
+				}
+
+				w.WriteHeader(200)
+				w.Write(response)
+
 			}
 		}
 		if userData.GetValueStatusUsr() == "Owner" {
