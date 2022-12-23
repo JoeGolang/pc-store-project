@@ -25,7 +25,7 @@ func ParamAddItemPurchase(w http.ResponseWriter, r *http.Request) {
 	)
 	vars := mux.Vars(r)
 
-	fmt.Fprintf(w, "Input ID User : %v\n", vars["IdItem"])
+	fmt.Fprintf(w, "Input ID Item : %v\n", vars["IdItem"])
 
 	id := vars["IdItem"]
 	item, _ = strconv.Atoi(id)
