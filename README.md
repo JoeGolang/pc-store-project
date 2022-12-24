@@ -1,5 +1,9 @@
 # GAMESTORE
 
+### FINAL PROJECT FOR GOLANG CLASS BATCH 2 SALT ACADEMY 21 Nov 2022 - 23 Dec 2022
+
+
+
 ● As User (Employee GAMESTORE) I Can Store Data Customer GAMESTORE<br />
 ● As User (Owner GAMESTORE) I Can See Detail Transaction (Revenue every Visit, PurchaseDate on Visit, Unique ID Customer)<br />
 ● As User (Owner GAMESTORE) I Can see List Of Disc Coupon By Customer (Unique ID)<br />
